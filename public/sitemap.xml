@@ -3,27 +3,32 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://po-miyasaka.jp/post/initial/</loc>
-    <lastmod>2020-03-30T12:46:29+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://po-miyasaka.jp/post/</loc>
-    <lastmod>2020-03-30T12:46:29+09:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://po-miyasaka.jp/posts/initial/</loc>
-    <lastmod>2020-03-30T12:41:50+09:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://po-miyasaka.jp/</loc>
     <lastmod>2020-03-30T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://po-miyasaka.jp/about/</loc>
+    <lastmod>2020-03-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://po-miyasaka.jp/tags/hugo/</loc>
+    <lastmod>2020-03-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://po-miyasaka.jp/hugo/</loc>
+    <lastmod>2020-03-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://po-miyasaka.jp/tags/</loc>
+    <lastmod>2020-03-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://po-miyasaka.jp/hugo/initial/</loc>
     <lastmod>2020-03-30T00:00:00+00:00</lastmod>
   </url>
   
@@ -37,10 +42,6 @@
   
   <url>
     <loc>https://po-miyasaka.jp/search/</loc>
-  </url>
-  
-  <url>
-    <loc>https://po-miyasaka.jp/tags/</loc>
   </url>
   
 </urlset>
