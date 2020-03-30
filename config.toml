@@ -1,14 +1,14 @@
-baseURL = "https://gohugo.io"
-title = "Hugo Themes"
-author = "Steve Francia"
-paginate = 3
-languageCode = "en"
-DefaultContentLanguage = "en"
+baseURL = "https://po-miyasaka.jp"
+title = "po records"
+author = "miyashi"
+paginate = 12
+languageCode = "ja"
+DefaultContentLanguage = "ja"
 enableInlineShortcodes = true
 footnoteReturnLinkContents = "^"
 
 [Author]
-  name = "hugo author"
+  name = "miyashi"
 
 [outputs]
     section = ["JSON", "HTML"]
