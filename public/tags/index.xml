@@ -1,7 +1,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>Tags on po records</title>
-		<link>https://po-miyasaka.jp/tags/</link>
+		<link>https://pensive-franklin-071d31.netlify.com/tags/</link>
 		<description>Recent content in Tags on po records</description>
 		<generator>Hugo -- gohugo.io</generator>
 		
@@ -11,7 +11,21 @@
     	
   		<lastBuildDate>Mon, 30 Mar 2020 00:00:00 +0000</lastBuildDate>
 		
-		<atom:link href="https://po-miyasaka.jp/tags/" rel="self" type="application/rss+xml" />
+		<atom:link href="https://pensive-franklin-071d31.netlify.com/tags/" rel="self" type="application/rss+xml" />
 		
+		<item>
+			<title>はじめてのhugo</title>
+			<link>https://pensive-franklin-071d31.netlify.com/post/initial/</link>
+			<pubDate>Mon, 30 Mar 2020 00:00:00 +0000</pubDate>
+			<guid>https://pensive-franklin-071d31.netlify.com/post/initial/</guid>
+			<description> hugo+netlifyを使用してブログを解説してみた。
+その名も「po records」
+「po」はprint objectを意味するLLDBのコマンドのエイリアス
+「records」はアカシック・レコードが格納された変数である😎
+themeのharborは シンプルでかっこいい&amp;amp;検索窓ついていたので選んだ。
+(もしかしたら検索窓はthemeに依らず後付できるかもしれない)
+ </description>
+		</item>
+      	
 	</channel>
 </rss>

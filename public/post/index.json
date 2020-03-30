@@ -2,14 +2,12 @@
     
         
             {
-                "ref": "https://po-miyasaka.jp/post/initial/",
-                "title": "Initial",
+                "ref": "https://pensive-franklin-071d31.netlify.com/post/initial/",
+                "title": "はじめてのhugo",
                 "section": "post",
                 "date" : "2020.03.30",
-                "body": ""
+                "body": " hugo+netlifyを使用してブログを解説してみた。\nその名も「po records」\n「po」はprint objectを意味するLLDBのコマンドのエイリアス\n「records」はアカシック・レコードが格納された変数である😎\nthemeのharborは シンプルでかっこいい\u0026amp;検索窓ついていたので選んだ。\n(もしかしたら検索窓はthemeに依らず後付できるかもしれない)\n "
             }
-        
-    ,
         
     
 ]
