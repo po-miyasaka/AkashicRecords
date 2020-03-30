@@ -1,5 +1,5 @@
 baseURL = "https://po-miyasaka.jp"
-title = "po record"
+title = "po records"
 author = "miyashi"
 paginate = 12
 languageCode = "ja"
