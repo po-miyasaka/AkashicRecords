@@ -1,7 +1,7 @@
 +++  
 author = "miyashi"  
 title = "Rubyの備忘録1 Optional周り"  
-date = "2020-04-07  
+date = "2020-04-07"
 description = ""  
 tags = [  
     "ruby",  
