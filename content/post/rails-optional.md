@@ -1,14 +1,15 @@
 +++  
 author = "miyashi"  
-title = "Rubyの備忘録1 Optional周り"  
-date = "2020-04-07"
+title = "RailsのOptional周りの備忘録"  
+date = "2020-04-06"  
 description = ""  
 tags = [  
     "ruby",  
     "rails",  
 ]  
 +++  
----
+
+------------
 
 **※ 一番下の追記が一番重要です。**
 
@@ -41,7 +42,6 @@ user.girlfriend&.name
 ```ruby
 user.girlfriend&.pet&.name
 ```
----
 
 # 備考
 ちなみに、`""`のような空文字はnilとしては扱われないので
@@ -54,3 +54,5 @@ user.girlfriend&.pet&.name
 動作を確認したバージョンは5.2.4.2だが、
 古いバージョンだと全角スペースは`false`になるらしいので注意
 
+
+---------
