@@ -1,0 +1,46 @@
++++  
+author = "miyashi"  
+title = "Rubyの備忘録1 Optional周り"  
+date = "2020-04-07  
+description = ""  
+tags = [  
+    "ruby",  
+    "rails",  
+]  
++++  
+---
+
+# ある値がｎilかどうかを確かめるには、`nil?`を使う。  
+
+(例)
+```
+user.girlfriend.nil?
+# girlfriendがnilの場合　=> true
+# girlfriendが存在する場合　=> false
+```
+
+# Optional Chainingを使う
+
+> `Optional Chaining`とは  
+> レシーバが`nil`の場合は評価を打ち切って`nil`を返し、  
+> `nil`でなければ、後続の評価をする便利な記法
+
+Rubyで`Optional Chaining`する場合は`Optional`な値に`&`をつけるだけでOK。  
+(例)
+```ruby
+user.girlfriend&.name
+# girlfriendがnilの場合　=> nil
+# girlfriendが存在する場合　=> "Tailor Swift"などの値
+```
+
+`Optional Chaining`は名前のとおり、鎖のように繋げて使えるのが便利  
+(例)
+```ruby
+user.girlfriend&.pet&.name
+```
+
+---
+
+
+
+
