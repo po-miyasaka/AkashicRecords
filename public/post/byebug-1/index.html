@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+<title>Railsのbyebugを使ったDebug方法</title>
+
+
+  
+
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="alternate" type="application/rss+xml" href="https://pensive-franklin-071d31.netlify.com/index.xml" title="Site Title">
+
+<link id="dark-mode" rel="stylesheet" href="https://pensive-franklin-071d31.netlify.com/css/dark-sys.css" />
+<link disabled id="dark-mode-theme" rel="stylesheet" href="https://pensive-franklin-071d31.netlify.com/css/dark.css" />
+<link rel="stylesheet" href="https://pensive-franklin-071d31.netlify.com/fontawesome/css/all.css" />
+<script src="https://pensive-franklin-071d31.netlify.com/js/bundle.js"></script>
+<meta name="generator" content="Hugo 0.68.3" />
+  </head>
+  <body>
+    
+  
+
+
+
+
+  <header>
+    <nav class="navbar">
+  <div class="nav">
+    
+      <a href="https://pensive-franklin-071d31.netlify.com/" class="nav-logo">
+      <img src="https://pensive-franklin-071d31.netlify.com/images/icon.png"
+           width="50"
+           height="50"
+           alt="Logo">
+      </a>
+    
+
+    <ul class="nav-links">
+      
+        
+          <li><a href="/about/" name="About"><i class="fas fa-user fa-lg"></i></a></li>
+        
+      
+        
+          <li><a href="/tags" name="Tags"><i class="fas fa-tag fa-lg"></i></a></li>
+        
+      
+        
+          <li><a href="/search" name="Search"><i class="fas fa-search fa-lg"></i></a></li>
+        
+      
+    </ul>
+  </div>
+</nav>
+
+    <div class="intro-header">
+      <div class="container">
+        <div class="post-heading">
+          
+            <h1>Railsのbyebugを使ったDebug方法</h1>
+          
+          
+            <span class="meta-post">
+  <i class="fa fa-calendar-alt"></i>&nbsp;May 2, 2020
+  
+</span>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+  <div class="container" role="main">
+    <article class="article" class="blog-post">
+      
+    <hr>
+<h1 id="概要">概要</h1>
+<p>Railsでブレークポイントを貼ってデバッグするには<a href="https://github.com/deivid-rodriguez/byebug"><code>byebug</code></a>というライブラリを使えるようだ。</p>
+<h1 id="概要-1">概要</h1>
+<p>Railsでブレークポイントを貼ってデバッグするには<a href="https://github.com/deivid-rodriguez/byebug"><code>byebug</code></a>というライブラリを使えるようだ。</p>
+<h1 id="byebugのインストール">byebugのインストール</h1>
+<p><code>byebug</code>は<code>Rails</code>にデフォルトで組み込まれていて、<code>Gemfile</code>をみると<code>test</code>と<code>development</code>環境でのみ使えるようにインストールされていた。</p>
+<h1 id="ブレークポイントを設定する">ブレークポイントを設定する。</h1>
+<p>ブレークさせるためには任意のコードに<code>byebug</code>の一行を追加するだけ。<br>
+該当のコードが実行されたタイミングでプロセスが一時停止して、コンソールでデバッグコマンドを実行することができるようになる。</p>
+<h1 id="良く使いそうなコマンド">良く使いそうなコマンド</h1>
+<h4 id="-コンソールで変数の中身を確認する">■ コンソールで変数の中身を確認する</h4>
+<p>値を確認するには特に特別なコマンドは必要ない。<br>
+コンソールに確認したい値を記述するだけ。</p>
+<p>確認できる変数は、ブレークしたフレームからアクセスできる変数に限る。<br>
+アクセスできる変数の一覧を調べるコマンドは次に記載</p>
+<h4 id="-アクセスできるすべての変数を確認する">■ アクセスできるすべての変数を確認する。</h4>
+<p><code>var all</code>コマンドを使えば、アクセスできる変数を一覧で見ることができる。<br>
+厳密にはブレークした時点のローカル、グローバル、インスタンス変数が一覧化される。<br>
+このコマンドの出力は膨大なので、以下のように出力を絞ることができる。</p>
+<ul>
+<li>ローカル変数のみを表示<br>
+<code>var local</code></li>
+<li>グローバル変数のみを表示<br>
+<code>var global</code></li>
+<li>インスタンス変数のみを表示<br>
+<code>var instance</code></li>
+</ul>
+<h4 id="-使えるメソッド一覧を表示">■ 使えるメソッド一覧を表示</h4>
+<p><code>puts methods</code>で使えるメソッドを一覧化できる。<br>
+これはbyebugの機能ではなく<code>puts self.methods</code>と同じ意味。</p>
+<h4 id="-スタックトレースを表示">■ スタックトレースを表示</h4>
+<p><code>where</code>でスタックトレースを表示することができる。</p>
+<h4 id="-特定のフレームに移動">■ 特定のフレームに移動</h4>
+<p><code>frame 3</code>　<code>frame 15</code>のように<code>where</code>コマンドで出力されたframe番号を入力すると特定のframeにジャンプすることができる。</p>
+<h4 id="-特定のthreadに移動">■ 特定のThreadに移動</h4>
+<p>RailsはリクエストごとにThreadが作られる仕様のようだ。
+<code>thread list</code>でThreadの一覧を表示することができる。
+<code>thread current</code>で現在ブレークしているフレームのあるThreadが表示される。
+<code>thread switch 2</code>のようにThread番号を指定すればThreadを切り替えることができる。</p>
+<hr>
+
+
+
+      
+        <div class="blog-tags">
+          
+            <a href="https://pensive-franklin-071d31.netlify.com//tags/ruby/">ruby</a>&nbsp;
+          
+            <a href="https://pensive-franklin-071d31.netlify.com//tags/rails/">rails</a>&nbsp;
+          
+            <a href="https://pensive-franklin-071d31.netlify.com//tags/byebug/">byebug</a>&nbsp;
+          
+        </div>
+      
+    </article>
+    
+  </div>
+
+    <footer>
+  <div class="container">
+    <p class="credits copyright">
+      <a href="https://pensive-franklin-071d31.netlify.com/about">miyashi</a>
+      &nbsp;&copy;
+      2020
+
+      
+        &nbsp;/&nbsp;
+        <a href="https://pensive-franklin-071d31.netlify.com/">po records</a>
+      
+
+      &nbsp;&ndash;&nbsp;
+      <i class="fas fa-moon" id="dark-mode-toggle"></i>
+
+      <p class="credits theme-by">
+        Powered By <a href="https://gohugo.io">Hugo</a>&nbsp;Theme <a href="https://github.com/matsuyoshi30/harbor">Harbor</a>
+      </p>
+    </p>
+  </div>
+</footer>
+
+    <script>
+  var toggle = document.getElementById("dark-mode-toggle");
+  var darkTheme = document.getElementById("dark-mode-theme");
+
+  var darkThemeSys = document.getElementById("dark-mode");
+
+  
+  var savedTheme = localStorage.getItem("dark-mode-storage") || "light";
+  if (matchMedia('(prefers-color-scheme: dark)').matches) {
+    savedTheme = "dark"
+  }
+  setTheme(savedTheme);
+
+  toggle.addEventListener("click", () => {
+    if (toggle.className === "fas fa-moon") {
+        setTheme("dark");
+    } else if (toggle.className === "fas fa-sun") {
+        setTheme("light");
+    }
+  });
+
+  function setTheme(mode) {
+    localStorage.setItem("dark-mode-storage", mode);
+
+    if (mode === "dark") {
+        darkTheme.disabled = false;
+        darkThemeSys.disabled = false;
+        toggle.className = "fas fa-sun";
+    } else if (mode === "light") {
+        darkTheme.disabled = true;
+        darkThemeSys.disabled = true;
+        toggle.className = "fas fa-moon";
+    }
+  }
+</script>
+
+  </body>
+</html>

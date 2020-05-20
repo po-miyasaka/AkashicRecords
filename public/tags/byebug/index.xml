@@ -1,0 +1,107 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>byebug on po records</title>
+		<link>https://pensive-franklin-071d31.netlify.com/tags/byebug/</link>
+		<description>Recent content in byebug on po records</description>
+		<generator>Hugo -- gohugo.io</generator>
+		
+  		<language>ja</language>
+		
+		<managingEditor>Page(/tags/byebug) (miyashi)</managingEditor>
+    	
+  		<lastBuildDate>Sat, 02 May 2020 00:00:00 +0000</lastBuildDate>
+		
+		<atom:link href="https://pensive-franklin-071d31.netlify.com/tags/byebug/" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>Railsのbyebugを使ったDebug方法</title>
+			<link>https://pensive-franklin-071d31.netlify.com/post/byebug-1/</link>
+			<pubDate>Sat, 02 May 2020 00:00:00 +0000</pubDate>
+			<guid>https://pensive-franklin-071d31.netlify.com/post/byebug-1/</guid>
+			<description> 概要 Railsでブレークポイントを貼ってデバッグするにはbyebugというライブラリを使えるようだ。
+概要 Railsでブレークポイントを貼ってデバッグするにはbyebugというライブラリを使えるようだ。
+byebugのインストール byebugはRailsにデフォルトで組み込まれていて、Gemfileをみるとtestとdevelopment環境でのみ使えるようにインストールされていた。
+ブレークポイントを設定する。 ブレークさせるためには任意のコードにbyebugの一行を追加するだけ。
+該当のコードが実行されたタイミングでプロセスが一時停止して、コンソールでデバッグコマンドを実行することができるようになる。
+良く使いそうなコマンド ■ コンソールで変数の中身を確認する 値を確認するには特に特別なコマンドは必要ない。
+コンソールに確認したい値を記述するだけ。
+確認できる変数は、ブレークしたフレームからアクセスできる変数に限る。
+アクセスできる変数の一覧を調べるコマンドは次に記載
+■ アクセスできるすべての変数を確認する。 var allコマンドを使えば、アクセスできる変数を一覧で見ることができる。
+厳密にはブレークした時点のローカル、グローバル、インスタンス変数が一覧化される。
+このコマンドの出力は膨大なので、以下のように出力を絞ることができる。
+ ローカル変数のみを表示
+var local グローバル変数のみを表示
+var global インスタンス変数のみを表示
+var instance  ■ 使えるメソッド一覧を表示 puts methodsで使えるメソッドを一覧化できる。
+これはbyebugの機能ではなくputs self.methodsと同じ意味。
+■ スタックトレースを表示 whereでスタックトレースを表示することができる。
+■ 特定のフレームに移動 frame 3　frame 15のようにwhereコマンドで出力されたframe番号を入力すると特定のframeにジャンプすることができる。
+■ 特定のThreadに移動 RailsはリクエストごとにThreadが作られる仕様のようだ。 thread listでThreadの一覧を表示することができる。 thread currentで現在ブレークしているフレームのあるThreadが表示される。 thread switch 2のようにThread番号を指定すればThreadを切り替えることができる。
+ </description>
+		</item>
+      	
+		<item>
+			<title>RailsのOptional周りの備忘録</title>
+			<link>https://pensive-franklin-071d31.netlify.com/post/rails-optional/</link>
+			<pubDate>Mon, 06 Apr 2020 00:00:00 +0000</pubDate>
+			<guid>https://pensive-franklin-071d31.netlify.com/post/rails-optional/</guid>
+			<description> ※ 一番下の追記が一番重要です。
+ある値がｎilかどうかを確かめるには、nil?を使う。 (例)
+user.girlfriend.nil? # girlfriendがnilの場合　=&amp;gt; true # girlfriendが存在する場合　=&amp;gt; false Optional Chainingを使う  Optional Chainingとは
+レシーバがnilの場合は評価を打ち切ってnilを返し、
+nilでなければ、後続の評価をする便利な記法
+ RubyでOptional Chainingする場合はOptionalな値に&amp;amp;をつけるだけでOK。
+(例)
+user.girlfriend&amp;amp;.name # girlfriendがnilの場合　=&amp;gt; nil # girlfriendが存在する場合　=&amp;gt; &amp;#34;Tailor Swift&amp;#34;などの値 Optional Chainingは名前のとおり、鎖のように繋げて使えるのが便利
+(例)
+user.girlfriend&amp;amp;.pet&amp;amp;.name 備考 ちなみに、&amp;quot;&amp;quot;のような空文字はnilとしては扱われないので empty?を使って判定する必要がある。
+追記 我らがRailsにはblank?という拡張された便利プロパティが実装されており、 これはnil, &amp;quot;&amp;quot;, &amp;quot; &amp;quot;,　&amp;quot;　&amp;quot;, {} ,[]のときにtrueになる。
+動作を確認したバージョンは5.2.4.2だが、 古いバージョンだと全角スペースはfalseになるらしいので注意
+ </description>
+		</item>
+      	
+		<item>
+			<title>VSCodeでdo-endの対応を示すハイライトが合わないときの対処法</title>
+			<link>https://pensive-franklin-071d31.netlify.com/post/in-case-braces-dont-fix/</link>
+			<pubDate>Sun, 05 Apr 2020 00:00:00 +0000</pubDate>
+			<guid>https://pensive-franklin-071d31.netlify.com/post/in-case-braces-dont-fix/</guid>
+			<description> 起こった現象 VSCodeでRubyを書くときに、do-endのネストが深くなった場合、
+doに対応するendをハイライトで示す機能がうまく合わない現象が起こった。(関連Issue)
+対処方法 設定のbuilt-inのlanguage-serverをonにしたら治った。
+SpecialThanks natpenguin
+ </description>
+		</item>
+      	
+		<item>
+			<title>はじめてのHUGO</title>
+			<link>https://pensive-franklin-071d31.netlify.com/post/setup_hugo/</link>
+			<pubDate>Mon, 30 Mar 2020 00:00:00 +0000</pubDate>
+			<guid>https://pensive-franklin-071d31.netlify.com/post/setup_hugo/</guid>
+			<description> hugo+netlifyを使用してブログを開設してみた。
+themeのharborは シンプルでかっこいい&amp;amp;検索窓ついていたので選んだ。
+(もしかしたら検索窓はthemeに依らず後付できるかもしれない)
+躓いたところ 以下の①〜③のステップを踏むことでテーマを適用することができると思っていたが、 なぜか表示されなかったので、④〜⑥のようなワークアラウンドを使った。
+①themes内で以下を実行
+$ git submodule add https://github.com/matsuyoshi30/harbor.git harbor ②projectルートディレクトリ内で以下の２つを実行する。
+$ git submodule init $ git submodule　update ③config.toml内に以下を記載
+themes = &amp;quot;harbor&amp;quot; ④ themes/harbor内の以下のファイルをそのままprojectルートに元からあるフォルダに差し替える
+* archetypes/ * layouts/ * static/ * content ⑤　themeの作成者の方が提供している、config.tomlのテンプレートをそのままコピペした。
+あとは、$ hugo server -Dを実行してhttp://localhost:1313/にアクセスすれば、うまく表示されるはず。
+その他 「hugo」と「hoge」が似ているので毎回Typoする。
+ </description>
+		</item>
+      	
+		<item>
+			<title>ブログ開設してみた</title>
+			<link>https://pensive-franklin-071d31.netlify.com/post/initial/</link>
+			<pubDate>Mon, 30 Mar 2020 00:00:00 +0000</pubDate>
+			<guid>https://pensive-franklin-071d31.netlify.com/post/initial/</guid>
+			<description> その名も「po records」
+「po」はprint objectを意味するLLDBのコマンドのエイリアス
+「records」はアカシック・レコードが格納された変数である😎
+ </description>
+		</item>
+      	
+	</channel>
+</rss>
