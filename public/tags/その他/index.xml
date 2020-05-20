@@ -1,0 +1,59 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>その他 on po records</title>
+		<link>https://pensive-franklin-071d31.netlify.com/tags/%E3%81%9D%E3%81%AE%E4%BB%96/</link>
+		<description>Recent content in その他 on po records</description>
+		<generator>Hugo -- gohugo.io</generator>
+		
+  		<language>ja</language>
+		
+		<managingEditor>Page(/tags/その他) (miyashi)</managingEditor>
+    	
+  		<lastBuildDate>Mon, 30 Mar 2020 00:00:00 +0000</lastBuildDate>
+		
+		<atom:link href="https://pensive-franklin-071d31.netlify.com/tags/%E3%81%9D%E3%81%AE%E4%BB%96/" rel="self" type="application/rss+xml" />
+		
+		<item>
+			<title>VSCodeでdo-endの対応を示すハイライトが合わないときの対処法</title>
+			<link>https://pensive-franklin-071d31.netlify.com/post/in-case-braces-dont-fix/</link>
+			<pubDate>Sun, 05 Apr 2020 00:00:00 +0000</pubDate>
+			<guid>https://pensive-franklin-071d31.netlify.com/post/in-case-braces-dont-fix/</guid>
+			<description> 起こった現象 VSCodeでRubyを書くときに、do-endのネストが深くなった場合、
+doに対応するendをハイライトで示す機能がうまく合わない現象が起こった。(関連Issue)
+対処方法 設定のbuilt-inのlanguage-serverをonにしたら治った。
+SpecialThanks natpenguin
+ </description>
+		</item>
+      	
+		<item>
+			<title>はじめてのHUGO</title>
+			<link>https://pensive-franklin-071d31.netlify.com/post/setup_hugo/</link>
+			<pubDate>Mon, 30 Mar 2020 00:00:00 +0000</pubDate>
+			<guid>https://pensive-franklin-071d31.netlify.com/post/setup_hugo/</guid>
+			<description> hugo+netlifyを使用してブログを開設してみた。
+themeのharborは シンプルでかっこいい&amp;amp;検索窓ついていたので選んだ。
+(もしかしたら検索窓はthemeに依らず後付できるかもしれない)
+躓いたところ 以下の①〜③のステップを踏むことでテーマを適用することができると思っていたが、 なぜか表示されなかったので、④〜⑥のようなワークアラウンドを使った。
+①themes内で以下を実行
+$ git submodule add https://github.com/matsuyoshi30/harbor.git harbor ②projectルートディレクトリ内で以下の２つを実行する。
+$ git submodule init $ git submodule　update ③config.toml内に以下を記載
+themes = &amp;quot;harbor&amp;quot; ④ themes/harbor内の以下のファイルをそのままprojectルートに元からあるフォルダに差し替える
+* archetypes/ * layouts/ * static/ * content ⑤　themeの作成者の方が提供している、config.tomlのテンプレートをそのままコピペした。
+あとは、$ hugo server -Dを実行してhttp://localhost:1313/にアクセスすれば、うまく表示されるはず。
+その他 「hugo」と「hoge」が似ているので毎回Typoする。
+ </description>
+		</item>
+      	
+		<item>
+			<title>ブログ開設してみた</title>
+			<link>https://pensive-franklin-071d31.netlify.com/post/initial/</link>
+			<pubDate>Mon, 30 Mar 2020 00:00:00 +0000</pubDate>
+			<guid>https://pensive-franklin-071d31.netlify.com/post/initial/</guid>
+			<description> その名も「po records」
+「po」はprint objectを意味するLLDBのコマンドのエイリアス
+「records」はアカシック・レコードが格納された変数である😎
+ </description>
+		</item>
+      	
+	</channel>
+</rss>
