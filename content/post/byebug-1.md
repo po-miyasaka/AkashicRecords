@@ -14,9 +14,6 @@ tags = [
 # 概要
 Railsでブレークポイントを貼ってデバッグするには[`byebug`](https://github.com/deivid-rodriguez/byebug)というライブラリを使えるようだ。
 
-# 概要
-Railsでブレークポイントを貼ってデバッグするには[`byebug`](https://github.com/deivid-rodriguez/byebug)というライブラリを使えるようだ。
-
 # byebugのインストール
 `byebug`は`Rails`にデフォルトで組み込まれていて、`Gemfile`をみると`test`と`development`環境でのみ使えるようにインストールされていた。
 
