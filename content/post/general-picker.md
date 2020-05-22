@@ -125,7 +125,7 @@ class GeneralPickerView: UIPickerView,
     var selectedHandler: SelectedHandler
     
     init(frame: CGRect,
-         dataArray: [[String]],
+         dataArray: [[String]], // 表示するデータはコンストラクタで渡す。
          selectedHandler: @escaping SelectedHandler) {
         self.dataArray = dataArray
         self.selectedHandler = selectedHandler
@@ -198,7 +198,7 @@ let pickerViewFrame = CGRect.init(x: 0, y: 0, width: 300, height: 200)
         
 // データが一次元配列でもOK
 let dataArray =  [
-    ["北海道", "青森", "東京", "さいたま",　"長野", "鳥取", "etc"]
+    ["北海道", "青森", "東京", "埼玉",　"長野", "鳥取", "etc"]
 ]
         
 let selectedHandler: GeneralPickerView.SelectedHandler = { selected in
@@ -213,8 +213,11 @@ let v = GeneralPickerView(
 
 ## まとめ  
 ここまで完結に書くことができる理由はUIPickerViewは基本的にdataSouceが`[[String]]`だからこそ共通化できています。
-UITableViewのようにdataの型が定まらないコンポーネントの場合は同じようにはいきません。
+UITableViewも同じようなプロトコルに準拠しますが、dataの型が定まらないため、同じようにはいきません。
 
 このコードはSwift4,5であれば動くはずなので、ご利用くださいませ。
 
+## 備考
+保持しておいた前回の状態を初期値に反映する機能はこの記事では実装していません。
+もし実装するのであれば、コンストラクタで初期値を渡すのがいいでしょう。
 ----  
