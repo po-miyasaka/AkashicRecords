@@ -33,7 +33,6 @@ UIPickerViewをうまくラップすることで、似たようなコードを�
 以下のコードはコピペでも動作するはずです。Playground等で試してみてください。
 
 ### 通常の実装方法
-まずは普通にプロトコルに準拠したコードを書いてみる。  
 
 ```javascript
 class TrumpPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSource {
@@ -110,7 +109,7 @@ class TrumpPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSourc
 
 通常の実装の利用例
 ```javascript
-let pickerViewFrame = CGRect.init(x: 0, y: 0, width: 300, height: 200)
+let pickerViewFrame = CGRect(x: 0, y: 0, width: 300, height: 200)
 let v = TrumpPickerView(frame: pickerViewFrame)
 ```
 
@@ -171,7 +170,7 @@ class GeneralPickerView: UIPickerView,
 ```
 改善案の利用例
 ```javascript
-let pickerViewFrame = CGRect.init(x: 0, y: 0, width: 300, height: 200)
+let pickerViewFrame = CGRect(x: 0, y: 0, width: 300, height: 200)
         
 let dataArray =  [
     ["クローバー", "スペード", "ハート", "ダイヤ"],
@@ -194,7 +193,7 @@ let v = GeneralPickerView(
 
 都道府県を選ぶ等、別のユースケースでも利用できる。
 ```javascript
-let pickerViewFrame = CGRect.init(x: 0, y: 0, width: 300, height: 200)
+let pickerViewFrame = CGRect(x: 0, y: 0, width: 300, height: 200)
         
 // データが一次元配列でもOK
 let dataArray =  [
@@ -217,7 +216,8 @@ UITableViewも同じようなプロトコルに準拠しますが、dataの型�
 
 このコードはSwift4,5であれば動くはずなので、ご利用くださいませ。
 
-## 備考
+## 備考  
 保持しておいた前回の状態を初期値に反映する機能はこの記事では実装していません。
 もし実装するのであれば、コンストラクタで初期値を渡すのがいいでしょう。
+
 ----  
