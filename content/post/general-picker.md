@@ -15,7 +15,7 @@ tags = [
 ----  
 
 ## UIPickerViewとは
-UIPickerViewはWebでいうWebいうフォームのOption要素のようなものです。
+UIPickerViewはWebでいうフォームのOption要素のようなものです。
 月日や都道府県などをユーザーに入力させる際に、キーボードではなく、選択肢から選んで入力することによって
 誤った入力を防ぐことができます。
 
