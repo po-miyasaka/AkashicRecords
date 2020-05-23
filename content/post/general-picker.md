@@ -34,6 +34,7 @@ UIPickerViewはWebでいうフォームのOption要素のようなものです�
 月日や都道府県などをユーザーに入力させる際に、キーボードではなく、選択肢から選んで入力することによって
 誤った入力を防ぐことができます。
 
+{{< figure src="/images/post/general-picker/trello.jpg" title="trello" class="img" width="200" >}}
 
 ## UIPickerView実装の課題
 iOSでのUIPickerViewを使うためには専用のプロトコルに準拠した実装をする必要があります。
@@ -46,6 +47,9 @@ UIPickerViewをうまくラップすることで、似たようなコードを�
 以下に通常の実装方法と改善案を比較します。  
 今回は52パターンのトランプから一つを選ぶコードを実装します。
 以下のコードはコピペでも動作するはずです。Playground等で試してみてください。
+
+{{< figure src="/images/post/general-picker/picker_sample.png" title="" class="center" width="300" >}}
+
 
 ### 通常の実装方法
 
@@ -226,10 +230,16 @@ let v = GeneralPickerView(
 ```
 
 ## まとめ  
-ここまで完結に書くことができる理由はUIPickerViewは基本的にdataSouceが`[[String]]`だからこそ共通化できています。
+ここまで簡潔に書くことができる理由はUIPickerViewは基本的にdataSouceが`[[String]]`で固定だからです。
 UITableViewも同じようなプロトコルに準拠しますが、dataの型が定まらないため、同じようにはいきません。
 
+利用方法としてaddSubViewをして使う他にも、
+UIPickerViewはTextFieldのinputViewにそのまま代入して使うこともできます。
+基本的にはこちらの使い方の方が便利かも
+
 このコードはSwift4,5であれば動くはずなので、ご利用くださいませ。
+
+
 
 ## 備考  
 保持しておいた前回の状態を初期値に反映する機能はこの記事では実装していません。
