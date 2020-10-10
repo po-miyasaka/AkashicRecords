@@ -3,45 +3,160 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://pensive-franklin-071d31.netlify.com/</loc>
+    <loc>https://miyashi.app/tags/ios/</loc>
+    <lastmod>2020-05-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://miyashi.app/tags/keen/</loc>
+    <lastmod>2020-05-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://miyashi.app/tags/keen-garage-%E5%8E%9F%E5%AE%BF/</loc>
+    <lastmod>2020-05-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://miyashi.app/post/</loc>
+    <lastmod>2020-05-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://miyashi.app/tags/swift/</loc>
+    <lastmod>2020-05-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://miyashi.app/tags/</loc>
+    <lastmod>2020-05-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://miyashi.app/tags/uikit/</loc>
+    <lastmod>2020-05-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://miyashi.app/tags/uipickerview/</loc>
+    <lastmod>2020-05-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://miyashi.app/tags/xcode/</loc>
+    <lastmod>2020-05-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://miyashi.app/post/general-picker/</loc>
+    <lastmod>2020-05-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://miyashi.app/tags/%E7%99%BB%E5%B1%B1/</loc>
+    <lastmod>2020-05-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://miyashi.app/post/shoe-fitter/</loc>
+    <lastmod>2020-05-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://miyashi.app/tags/appstoreconnect/</loc>
+    <lastmod>2020-05-15T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://miyashi.app/tags/lldb/</loc>
+    <lastmod>2020-05-15T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://miyashi.app/post/reject-uiwebview/</loc>
+    <lastmod>2020-05-15T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://miyashi.app/tags/uiwebview/</loc>
+    <lastmod>2020-05-15T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://miyashi.app/tags/byebug/</loc>
+    <lastmod>2020-05-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://miyashi.app/tags/rails/</loc>
+    <lastmod>2020-05-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://miyashi.app/post/byebug-1/</loc>
+    <lastmod>2020-05-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://miyashi.app/tags/ruby/</loc>
+    <lastmod>2020-05-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://miyashi.app/post/rails-optional/</loc>
+    <lastmod>2020-04-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://miyashi.app/tags/vscode/</loc>
+    <lastmod>2020-04-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://miyashi.app/post/in-case-braces-dont-fix/</loc>
+    <lastmod>2020-04-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://miyashi.app/</loc>
     <lastmod>2020-03-30T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://pensive-franklin-071d31.netlify.com/about/</loc>
+    <loc>https://miyashi.app/about/</loc>
     <lastmod>2020-03-30T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://pensive-franklin-071d31.netlify.com/tags/hugo/</loc>
+    <loc>https://miyashi.app/tags/hugo/</loc>
     <lastmod>2020-03-30T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://pensive-franklin-071d31.netlify.com/post/</loc>
+    <loc>https://miyashi.app/tags/%E3%81%9D%E3%81%AE%E4%BB%96/</loc>
     <lastmod>2020-03-30T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://pensive-franklin-071d31.netlify.com/tags/</loc>
+    <loc>https://miyashi.app/post/setup_hugo/</loc>
     <lastmod>2020-03-30T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://pensive-franklin-071d31.netlify.com/post/initial/</loc>
+    <loc>https://miyashi.app/post/initial/</loc>
     <lastmod>2020-03-30T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://pensive-franklin-071d31.netlify.com/archives/</loc>
+    <loc>https://miyashi.app/archives/</loc>
   </url>
   
   <url>
-    <loc>https://pensive-franklin-071d31.netlify.com/categories/</loc>
+    <loc>https://miyashi.app/categories/</loc>
   </url>
   
   <url>
-    <loc>https://pensive-franklin-071d31.netlify.com/search/</loc>
+    <loc>https://miyashi.app/search/</loc>
   </url>
   
 </urlset>

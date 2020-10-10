@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+<title>汎用的に使えるUIPickerViewを作る</title>
+
+
+  
+
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="alternate" type="application/rss+xml" href="https://miyashi.app/index.xml" title="Site Title">
+
+<link id="dark-mode" rel="stylesheet" href="https://miyashi.app/css/dark-sys.css" />
+<link disabled id="dark-mode-theme" rel="stylesheet" href="https://miyashi.app/css/dark.css" />
+<link rel="stylesheet" href="https://miyashi.app/fontawesome/css/all.css" />
+<script src="https://miyashi.app/js/bundle.js"></script>
+<meta name="generator" content="Hugo 0.68.3" />
+  </head>
+  <body>
+    
+  
+
+
+
+
+  <header>
+    <nav class="navbar">
+  <div class="nav">
+    
+      <a href="https://miyashi.app/" class="nav-logo">
+      <img src="https://miyashi.app/images/icon.png"
+           width="50"
+           height="50"
+           alt="Logo">
+      </a>
+    
+
+    <ul class="nav-links">
+      
+        
+          <li><a href="/about/" name="About"><i class="fas fa-user fa-lg"></i></a></li>
+        
+      
+        
+          <li><a href="/tags" name="Tags"><i class="fas fa-tag fa-lg"></i></a></li>
+        
+      
+        
+          <li><a href="/search" name="Search"><i class="fas fa-search fa-lg"></i></a></li>
+        
+      
+    </ul>
+  </div>
+</nav>
+
+    <div class="intro-header">
+      <div class="container">
+        <div class="post-heading">
+          
+            <h1>汎用的に使えるUIPickerViewを作る</h1>
+          
+          
+            <span class="meta-post">
+  <i class="fa fa-calendar-alt"></i>&nbsp;May 22, 2020
+  
+</span>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+  <div class="container" role="main">
+    <article class="article" class="blog-post">
+      
+    <hr>
+<h2 id="目次">目次</h2>
+<pre><code>* UIPickerViewとは
+* UIPickerView実装の課題
+* 課題の解決案
+    * 通常の実装方法
+        * 通常の実装の利用例
+    * 改善案の実装
+        * 改善案の利用例
+        * 別のユースケースでの利用例
+* まとめ
+* 備考
+</code></pre><h2 id="uipickerviewとは">UIPickerViewとは</h2>
+<p>UIPickerViewはWebでいうフォームのOption要素のようなものです。
+月日や都道府県などをユーザーに入力させる際に、キーボードではなく、選択肢から選んで入力することによって
+誤った入力を防ぐことができます。</p>
+<figure class="img">
+    <img src="/images/post/general-picker/trello.jpg" width="200"/> <figcaption>
+            <h4>trello</h4>
+        </figcaption>
+</figure>
+
+<h2 id="uipickerview実装の課題">UIPickerView実装の課題</h2>
+<p>iOSでのUIPickerViewを使うためには専用のプロトコルに準拠した実装をする必要があります。
+普通に実装していると、特定のユースケースをプロトコルの実装に含めてしまい、<br>
+UIPickerViewを使ったコンポーネントを実装するために似たようなコードを量産することになってしまいます。</p>
+<h2 id="課題の解決案">課題の解決案</h2>
+<p>UIPickerViewをうまくラップすることで、似たようなコードを量産することなく、ユースケースごとに変化する部分だけを実装して、共通部分をまとめることができます。<br>
+以下に通常の実装方法と改善案を比較します。<br>
+今回は52パターンのトランプから一つを選ぶコードを実装します。
+以下のコードはコピペでも動作するはずです。Playground等で試してみてください。</p>
+<figure class="center">
+    <img src="/images/post/general-picker/picker_sample.png" width="300"/> 
+</figure>
+
+<h3 id="通常の実装方法">通常の実装方法</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TrumpPickerView</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">UIPickerView</span>, <span style="color:#a6e22e">UIPickerViewDelegate</span>, <span style="color:#a6e22e">UIPickerViewDataSource</span> {
+
+    <span style="color:#75715e">// 問題点① データをViewに直接書くことで、他のユースケースで使えなくなる。
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">type</span><span style="color:#f92672">:</span> [String] {
+        [<span style="color:#e6db74">&#34;クローバー&#34;</span>, <span style="color:#e6db74">&#34;スペード&#34;</span>, <span style="color:#e6db74">&#34;ハート&#34;</span>, <span style="color:#e6db74">&#34;ダイヤ&#34;</span>]
+    }
+    
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">numbers</span><span style="color:#f92672">:</span> [String] {
+        [<span style="color:#e6db74">&#34;A&#34;</span>, <span style="color:#e6db74">&#34;2&#34;</span>, <span style="color:#e6db74">&#34;3&#34;</span>, <span style="color:#e6db74">&#34;4&#34;</span>, <span style="color:#e6db74">&#34;5&#34;</span>, <span style="color:#e6db74">&#34;6&#34;</span>, <span style="color:#e6db74">&#34;7&#34;</span>, <span style="color:#e6db74">&#34;8&#34;</span>, <span style="color:#e6db74">&#34;9&#34;</span>, <span style="color:#e6db74">&#34;10&#34;</span>, <span style="color:#e6db74">&#34;J&#34;</span>, <span style="color:#e6db74">&#34;Q&#34;</span>, <span style="color:#e6db74">&#34;K&#34;</span>]
+    }
+
+    <span style="color:#a6e22e">override</span> <span style="color:#a6e22e">init</span>(<span style="color:#a6e22e">frame</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">CGRect</span>) {
+        <span style="color:#66d9ef">super</span>.<span style="color:#a6e22e">init</span>(<span style="color:#a6e22e">frame</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">frame</span>)
+        <span style="color:#a6e22e">delegate</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">self</span>
+        <span style="color:#a6e22e">dataSource</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">self</span>
+    }
+    
+    <span style="color:#a6e22e">required</span> <span style="color:#a6e22e">init</span><span style="color:#f92672">?</span>(<span style="color:#a6e22e">coder</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">NSCoder</span>) {
+        <span style="color:#a6e22e">fatalError</span>(<span style="color:#e6db74">&#34;init(coder:) has not been implemented&#34;</span>)
+    }
+
+    <span style="color:#75715e">// 以下PickerView専用のプロトコル
+</span><span style="color:#75715e"></span>
+    <span style="color:#a6e22e">func</span> <span style="color:#a6e22e">numberOfComponents</span>(<span style="color:#66d9ef">in</span> <span style="color:#a6e22e">pickerView</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">UIPickerView</span>) <span style="color:#f92672">-&gt;</span> <span style="color:#a6e22e">Int</span> {
+        <span style="color:#ae81ff">2</span>　<span style="color:#75715e">// 問題点②　データが増えたときにこの数字も修正する必要がでてくる。
+</span><span style="color:#75715e"></span>    }
+    
+    <span style="color:#a6e22e">func</span> <span style="color:#a6e22e">pickerView</span>(<span style="color:#a6e22e">_</span> <span style="color:#a6e22e">pickerView</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">UIPickerView</span>,
+                     <span style="color:#a6e22e">numberOfRowsInComponent</span> <span style="color:#a6e22e">component</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">Int</span>) <span style="color:#f92672">-&gt;</span> <span style="color:#a6e22e">Int</span> {
+
+        <span style="color:#75715e">// 問題点③　データが増えたときにcaseを増やす必要がある。
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">switch</span> <span style="color:#a6e22e">component</span> {
+        <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">type</span>.<span style="color:#a6e22e">count</span>
+        <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">numbers</span>.<span style="color:#a6e22e">count</span>
+        <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
+
+        <span style="color:#75715e">// 問題点④　使わないのにdefaultが気持ち悪い。
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>
+        }
+    }
+    
+    <span style="color:#a6e22e">func</span> <span style="color:#a6e22e">pickerView</span>(<span style="color:#a6e22e">_</span> <span style="color:#a6e22e">pickerView</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">UIPickerView</span>,
+                     <span style="color:#a6e22e">titleForRow</span> <span style="color:#a6e22e">row</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">Int</span>,
+                     <span style="color:#a6e22e">forComponent</span> <span style="color:#a6e22e">component</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">Int</span>) <span style="color:#f92672">-&gt;</span> String<span style="color:#f92672">?</span> {
+                         
+        <span style="color:#75715e">// 問題点⑤　3番同様データが増えたときにcaseを増やす必要がある。
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">switch</span> <span style="color:#a6e22e">component</span> {
+        <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">:</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">type</span>[<span style="color:#a6e22e">row</span>]
+        <span style="color:#66d9ef">case</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">:</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">numbers</span>[<span style="color:#a6e22e">row</span>]
+        <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
+
+        <span style="color:#75715e">// 問題点⑥　4番同様defaultが気持ち悪い。
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span>
+        }
+    }
+
+    <span style="color:#a6e22e">func</span> <span style="color:#a6e22e">pickerView</span>(<span style="color:#a6e22e">_</span> <span style="color:#a6e22e">pickerView</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">UIPickerView</span>,
+                     <span style="color:#a6e22e">didSelectRow</span> <span style="color:#a6e22e">row</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">Int</span>,
+                      <span style="color:#a6e22e">inComponent</span> <span style="color:#a6e22e">component</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">Int</span>) {
+        <span style="color:#75715e">// 選んだ結果を利用するための実装も必要
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">print</span>(<span style="color:#a6e22e">row</span>)
+        <span style="color:#a6e22e">print</span>(<span style="color:#a6e22e">component</span>)
+    }
+}
+
+
+</code></pre></div><p>通常の実装の利用例</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">let</span> <span style="color:#a6e22e">pickerViewFrame</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">CGRect</span>(<span style="color:#a6e22e">x</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">y</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">300</span>, <span style="color:#a6e22e">height</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">200</span>)
+<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">v</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">TrumpPickerView</span>(<span style="color:#a6e22e">frame</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">pickerViewFrame</span>)
+</code></pre></div><h3 id="改善案の実装">改善案の実装</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">GeneralPickerView</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">UIPickerView</span>,
+                         <span style="color:#a6e22e">UIPickerViewDelegate</span>,
+                        　<span style="color:#a6e22e">UIPickerViewDataSource</span> {
+    
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">dataArray</span><span style="color:#f92672">:</span> [[String]]
+    <span style="color:#a6e22e">typealias</span> <span style="color:#a6e22e">SelectedHandler</span> <span style="color:#f92672">=</span> ([String]) <span style="color:#f92672">-&gt;</span> ()
+    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">selectedHandler</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">SelectedHandler</span>
+    
+    <span style="color:#a6e22e">init</span>(<span style="color:#a6e22e">frame</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">CGRect</span>,
+         <span style="color:#a6e22e">dataArray</span><span style="color:#f92672">:</span> [[String]], <span style="color:#75715e">// 表示するデータはコンストラクタで渡す。
+</span><span style="color:#75715e"></span>         <span style="color:#a6e22e">selectedHandler</span><span style="color:#f92672">:</span> <span style="color:#960050;background-color:#1e0010">@</span><span style="color:#a6e22e">escaping</span> <span style="color:#a6e22e">SelectedHandler</span>) {
+        <span style="color:#a6e22e">self</span>.<span style="color:#a6e22e">dataArray</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">dataArray</span>
+        <span style="color:#a6e22e">self</span>.<span style="color:#a6e22e">selectedHandler</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">selectedHandler</span>
+        <span style="color:#66d9ef">super</span>.<span style="color:#a6e22e">init</span>(<span style="color:#a6e22e">frame</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">frame</span>)
+        <span style="color:#a6e22e">delegate</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">self</span>
+        <span style="color:#a6e22e">dataSource</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">self</span>
+    }
+    
+    <span style="color:#a6e22e">required</span> <span style="color:#a6e22e">init</span><span style="color:#f92672">?</span>(<span style="color:#a6e22e">coder</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">NSCoder</span>) {
+        <span style="color:#a6e22e">fatalError</span>(<span style="color:#e6db74">&#34;init(coder:) has not been implemented&#34;</span>)
+    }
+    
+    
+    <span style="color:#75715e">// 以下PickerView専用のプロトコル
+</span><span style="color:#75715e"></span>
+    <span style="color:#a6e22e">func</span> <span style="color:#a6e22e">numberOfComponents</span>(<span style="color:#66d9ef">in</span> <span style="color:#a6e22e">pickerView</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">UIPickerView</span>) <span style="color:#f92672">-&gt;</span> <span style="color:#a6e22e">Int</span> {
+        <span style="color:#a6e22e">dataArray</span>.<span style="color:#a6e22e">count</span>
+    }
+    
+    <span style="color:#a6e22e">func</span> <span style="color:#a6e22e">pickerView</span>(<span style="color:#a6e22e">_</span> <span style="color:#a6e22e">pickerView</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">UIPickerView</span>,
+                     <span style="color:#a6e22e">numberOfRowsInComponent</span> <span style="color:#a6e22e">component</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">Int</span>) <span style="color:#f92672">-&gt;</span> <span style="color:#a6e22e">Int</span> {
+        <span style="color:#a6e22e">dataArray</span>[<span style="color:#a6e22e">component</span>].<span style="color:#a6e22e">count</span>
+    }
+    
+    <span style="color:#a6e22e">func</span> <span style="color:#a6e22e">pickerView</span>(<span style="color:#a6e22e">_</span> <span style="color:#a6e22e">pickerView</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">UIPickerView</span>,
+                     <span style="color:#a6e22e">titleForRow</span> <span style="color:#a6e22e">row</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">Int</span>,
+                     <span style="color:#a6e22e">forComponent</span> <span style="color:#a6e22e">component</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">Int</span>) <span style="color:#f92672">-&gt;</span> String<span style="color:#f92672">?</span> {
+        <span style="color:#a6e22e">dataArray</span>[<span style="color:#a6e22e">component</span>][<span style="color:#a6e22e">row</span>]
+    }
+    
+    <span style="color:#a6e22e">func</span> <span style="color:#a6e22e">pickerView</span>(<span style="color:#a6e22e">_</span> <span style="color:#a6e22e">pickerView</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">UIPickerView</span>,
+                     <span style="color:#a6e22e">didSelectRow</span> <span style="color:#a6e22e">_</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">Int</span>, <span style="color:#a6e22e">inComponent</span> <span style="color:#a6e22e">_</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">Int</span>) {
+
+        <span style="color:#75715e">// 変更がある度にselectedHandlerにデータが送られる。
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">selectedData</span><span style="color:#f92672">:</span> [String] <span style="color:#f92672">=</span> <span style="color:#a6e22e">dataArray</span>.<span style="color:#a6e22e">enumerated</span>().<span style="color:#a6e22e">map</span> { <span style="color:#a6e22e">component</span>, <span style="color:#a6e22e">data</span> <span style="color:#66d9ef">in</span>
+            <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">selectedRow</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">pickerView</span>.<span style="color:#a6e22e">selectedRow</span>(<span style="color:#a6e22e">inComponent</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">component</span>)
+            <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">data</span>[<span style="color:#a6e22e">selectedRow</span>]
+        }
+        
+        <span style="color:#a6e22e">selectedHandler</span>(<span style="color:#a6e22e">selectedData</span>)
+    }
+}
+</code></pre></div><p>改善案の利用例</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">let</span> <span style="color:#a6e22e">pickerViewFrame</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">CGRect</span>(<span style="color:#a6e22e">x</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">y</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">300</span>, <span style="color:#a6e22e">height</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">200</span>)
+        
+<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">dataArray</span> <span style="color:#f92672">=</span>  [
+    [<span style="color:#e6db74">&#34;クローバー&#34;</span>, <span style="color:#e6db74">&#34;スペード&#34;</span>, <span style="color:#e6db74">&#34;ハート&#34;</span>, <span style="color:#e6db74">&#34;ダイヤ&#34;</span>],
+    [<span style="color:#e6db74">&#34;A&#34;</span>, <span style="color:#e6db74">&#34;2&#34;</span>, <span style="color:#e6db74">&#34;3&#34;</span>, <span style="color:#e6db74">&#34;4&#34;</span>, <span style="color:#e6db74">&#34;5&#34;</span>, <span style="color:#e6db74">&#34;6&#34;</span>, <span style="color:#e6db74">&#34;7&#34;</span>, <span style="color:#e6db74">&#34;8&#34;</span>, <span style="color:#e6db74">&#34;9&#34;</span>, <span style="color:#e6db74">&#34;10&#34;</span>, <span style="color:#e6db74">&#34;J&#34;</span>, <span style="color:#e6db74">&#34;Q&#34;</span>, <span style="color:#e6db74">&#34;K&#34;</span>]
+]
+        
+<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">selectedHandler</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">GeneralPickerView</span>.<span style="color:#a6e22e">SelectedHandler</span> <span style="color:#f92672">=</span> { <span style="color:#a6e22e">selected</span> <span style="color:#66d9ef">in</span>
+
+    <span style="color:#75715e">// 選択されたデータは一次元配列として帰ってくる
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">print</span>(<span style="color:#a6e22e">selected</span>[<span style="color:#ae81ff">0</span>]) <span style="color:#75715e">// ハート
+</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">print</span>(<span style="color:#a6e22e">selected</span>[<span style="color:#ae81ff">1</span>]) <span style="color:#75715e">// 3
+</span><span style="color:#75715e"></span>}
+        
+<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">v</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">GeneralPickerView</span>(
+            <span style="color:#a6e22e">frame</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">pickerViewFrame</span>,
+            <span style="color:#a6e22e">dataArray</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">dataArray</span>,
+            <span style="color:#a6e22e">selectedHandler</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">selectedHandler</span>)
+
+</code></pre></div><p>都道府県を選ぶ等、別のユースケースでも利用できる。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">let</span> <span style="color:#a6e22e">pickerViewFrame</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">CGRect</span>(<span style="color:#a6e22e">x</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">y</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">width</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">300</span>, <span style="color:#a6e22e">height</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">200</span>)
+        
+<span style="color:#75715e">// データが一次元配列でもOK
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">let</span> <span style="color:#a6e22e">dataArray</span> <span style="color:#f92672">=</span>  [
+    [<span style="color:#e6db74">&#34;北海道&#34;</span>, <span style="color:#e6db74">&#34;青森&#34;</span>, <span style="color:#e6db74">&#34;東京&#34;</span>, <span style="color:#e6db74">&#34;埼玉&#34;</span>,　<span style="color:#e6db74">&#34;長野&#34;</span>, <span style="color:#e6db74">&#34;鳥取&#34;</span>, <span style="color:#e6db74">&#34;etc&#34;</span>]
+]
+        
+<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">selectedHandler</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">GeneralPickerView</span>.<span style="color:#a6e22e">SelectedHandler</span> <span style="color:#f92672">=</span> { <span style="color:#a6e22e">selected</span> <span style="color:#66d9ef">in</span>
+    <span style="color:#a6e22e">print</span>(<span style="color:#a6e22e">selected</span>[<span style="color:#ae81ff">0</span>])　<span style="color:#75715e">// 鳥取
+</span><span style="color:#75715e"></span>}
+        
+<span style="color:#66d9ef">let</span> <span style="color:#a6e22e">v</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">GeneralPickerView</span>(
+            <span style="color:#a6e22e">frame</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">pickerViewFrame</span>,
+            <span style="color:#a6e22e">dataArray</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">dataArray</span>,
+            <span style="color:#a6e22e">selectedHandler</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">selectedHandler</span>)
+</code></pre></div><h2 id="まとめ">まとめ</h2>
+<p>ここまで簡潔に書くことができる理由はUIPickerViewは基本的にdataSouceが<code>[[String]]</code>で固定だからです。
+UITableViewも同じようなプロトコルに準拠しますが、dataの型が定まらないため、同じようにはいきません。</p>
+<p>利用方法としてaddSubViewをして使う他にも、
+UIPickerViewはTextFieldのinputViewにそのまま代入して使うこともできます。
+基本的にはこちらの使い方の方が便利かも</p>
+<p>このコードはSwift4,5であれば動くはずなので、ご利用くださいませ。</p>
+<h2 id="備考">備考</h2>
+<p>保持しておいた前回の状態を初期値に反映する機能はこの記事では実装していません。
+もし実装するのであれば、コンストラクタで初期値を渡すのがいいでしょう。</p>
+<hr>
+
+
+
+      
+        <div class="blog-tags">
+          
+            <a href="https://miyashi.app//tags/xcode/">Xcode</a>&nbsp;
+          
+            <a href="https://miyashi.app//tags/ios/">iOS</a>&nbsp;
+          
+            <a href="https://miyashi.app//tags/swift/">Swift</a>&nbsp;
+          
+            <a href="https://miyashi.app//tags/uikit/">UIKit</a>&nbsp;
+          
+            <a href="https://miyashi.app//tags/uipickerview/">UIPickerView</a>&nbsp;
+          
+        </div>
+      
+    </article>
+    
+  </div>
+
+    <footer>
+  <div class="container">
+    <p class="credits copyright">
+      <a href="https://miyashi.app/about">miyashi</a>
+      &nbsp;&copy;
+      2020
+
+      
+        &nbsp;/&nbsp;
+        <a href="https://miyashi.app/">po records</a>
+      
+
+      &nbsp;&ndash;&nbsp;
+      <i class="fas fa-moon" id="dark-mode-toggle"></i>
+
+      <p class="credits theme-by">
+        Powered By <a href="https://gohugo.io">Hugo</a>&nbsp;Theme <a href="https://github.com/matsuyoshi30/harbor">Harbor</a>
+      </p>
+    </p>
+  </div>
+</footer>
+
+    <script>
+  var toggle = document.getElementById("dark-mode-toggle");
+  var darkTheme = document.getElementById("dark-mode-theme");
+
+  var darkThemeSys = document.getElementById("dark-mode");
+
+  
+  var savedTheme = localStorage.getItem("dark-mode-storage") || "light";
+  if (matchMedia('(prefers-color-scheme: dark)').matches) {
+    savedTheme = "dark"
+  }
+  setTheme(savedTheme);
+
+  toggle.addEventListener("click", () => {
+    if (toggle.className === "fas fa-moon") {
+        setTheme("dark");
+    } else if (toggle.className === "fas fa-sun") {
+        setTheme("light");
+    }
+  });
+
+  function setTheme(mode) {
+    localStorage.setItem("dark-mode-storage", mode);
+
+    if (mode === "dark") {
+        darkTheme.disabled = false;
+        darkThemeSys.disabled = false;
+        toggle.className = "fas fa-sun";
+    } else if (mode === "light") {
+        darkTheme.disabled = true;
+        darkThemeSys.disabled = true;
+        toggle.className = "fas fa-moon";
+    }
+  }
+</script>
+
+  </body>
+</html>

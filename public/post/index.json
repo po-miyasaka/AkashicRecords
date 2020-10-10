@@ -2,11 +2,81 @@
     
         
             {
-                "ref": "https://pensive-franklin-071d31.netlify.com/post/initial/",
-                "title": "はじめてのhugo",
+                "ref": "https://miyashi.app/post/general-picker/",
+                "title": "汎用的に使えるUIPickerViewを作る",
+                "section": "post",
+                "date" : "2020.05.22",
+                "body": " 目次 * UIPickerViewとは * UIPickerView実装の課題 * 課題の解決案 * 通常の実装方法 * 通常の実装の利用例 * 改善案の実装 * 改善案の利用例 * 別のユースケースでの利用例 * まとめ * 備考 UIPickerViewとは UIPickerViewはWebでいうフォームのOption要素のようなものです。 月日や都道府県などをユーザーに入力させる際に、キーボードではなく、選択肢から選んで入力することによって 誤った入力を防ぐことができます。\n trello   UIPickerView実装の課題 iOSでのUIPickerViewを使うためには専用のプロトコルに準拠した実装をする必要があります。 普通に実装していると、特定のユースケースをプロトコルの実装に含めてしまい、\nUIPickerViewを使ったコンポーネントを実装するために似たようなコードを量産することになってしまいます。\n課題の解決案 UIPickerViewをうまくラップすることで、似たようなコードを量産することなく、ユースケースごとに変化する部分だけを実装して、共通部分をまとめることができます。\n以下に通常の実装方法と改善案を比較します。\n今回は52パターンのトランプから一つを選ぶコードを実装します。 以下のコードはコピペでも動作するはずです。Playground\u0008等で試してみてください。\n 通常の実装方法 class TrumpPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSource { // 問題点① データをViewに直接書くことで、他のユースケースで使えなくなる。  var type: [String] { [\u0026#34;クローバー\u0026#34;, \u0026#34;スペード\u0026#34;, \u0026#34;ハート\u0026#34;, \u0026#34;ダイヤ\u0026#34;] } var numbers: [String] { [\u0026#34;A\u0026#34;, \u0026#34;2\u0026#34;, \u0026#34;3\u0026#34;, \u0026#34;4\u0026#34;, \u0026#34;5\u0026#34;, \u0026#34;6\u0026#34;, \u0026#34;7\u0026#34;, \u0026#34;8\u0026#34;, \u0026#34;9\u0026#34;, \u0026#34;10\u0026#34;, \u0026#34;J\u0026#34;, \u0026#34;Q\u0026#34;, \u0026#34;K\u0026#34;] } override init(frame: CGRect) { super.init(frame: frame) delegate = self dataSource = self } required init?(coder: NSCoder) { fatalError(\u0026#34;init(coder:) has not been implemented\u0026#34;) } // 以下PickerView専用のプロトコル  func numberOfComponents(in pickerView: UIPickerView) -\u0026gt; Int { 2　// 問題点②　データが増えたときにこの数字も修正する必要がでてくる。  } func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -\u0026gt; Int { // 問題点③　データが増えたときにcaseを増やす必要がある。  switch component { case 0: return type.count case 1: return numbers.count default: // 問題点④　使わないのにdefaultが気持ち悪い。  return 0 } } func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -\u0026gt; String? { // 問題点⑤　3番同様データが増えたときにcaseを増やす必要がある。  switch component { case 0: return type[row] case 1: return numbers[row] default: // 問題点⑥　4番同様defaultが気持ち悪い。  return \u0026#34;\u0026#34; } } func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) { // 選んだ結果を利用するための実装も必要  print(row) print(component) } } 通常の実装の利用例\nlet pickerViewFrame = CGRect(x: 0, y: 0, width: 300, height: 200) let v = TrumpPickerView(frame: pickerViewFrame) 改善案の実装 class GeneralPickerView: UIPickerView, UIPickerViewDelegate, UIPickerViewDataSource { var dataArray: [[String]] typealias SelectedHandler = ([String]) -\u0026gt; () var selectedHandler: SelectedHandler init(frame: CGRect, dataArray: [[String]], // 表示するデータはコンストラクタで渡す。  selectedHandler: @escaping SelectedHandler) { self.dataArray = dataArray self.selectedHandler = selectedHandler super.init(frame: frame) delegate = self dataSource = self } required init?(coder: NSCoder) { fatalError(\u0026#34;init(coder:) has not been implemented\u0026#34;) } // 以下PickerView専用のプロトコル  func numberOfComponents(in pickerView: UIPickerView) -\u0026gt; Int { dataArray.count } func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -\u0026gt; Int { dataArray[component].count } func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -\u0026gt; String? { dataArray[component][row] } func pickerView(_ pickerView: UIPickerView, didSelectRow _: Int, inComponent _: Int) { // 変更がある度にselectedHandlerにデータが送られる。  let selectedData: [String] = dataArray.enumerated().map { component, data in let selectedRow = pickerView.selectedRow(inComponent: component) return data[selectedRow] } selectedHandler(selectedData) } } 改善案の利用例\nlet pickerViewFrame = CGRect(x: 0, y: 0, width: 300, height: 200) let dataArray = [ [\u0026#34;クローバー\u0026#34;, \u0026#34;スペード\u0026#34;, \u0026#34;ハート\u0026#34;, \u0026#34;ダイヤ\u0026#34;], [\u0026#34;A\u0026#34;, \u0026#34;2\u0026#34;, \u0026#34;3\u0026#34;, \u0026#34;4\u0026#34;, \u0026#34;5\u0026#34;, \u0026#34;6\u0026#34;, \u0026#34;7\u0026#34;, \u0026#34;8\u0026#34;, \u0026#34;9\u0026#34;, \u0026#34;10\u0026#34;, \u0026#34;J\u0026#34;, \u0026#34;Q\u0026#34;, \u0026#34;K\u0026#34;] ] let selectedHandler: GeneralPickerView.SelectedHandler = { selected in // 選択されたデータは一次元配列として帰ってくる  print(selected[0]) // ハート  print(selected[1]) // 3 } let v = GeneralPickerView( frame: pickerViewFrame, dataArray: dataArray, selectedHandler: selectedHandler) 都道府県を選ぶ等、別のユースケースでも利用できる。\nlet pickerViewFrame = CGRect(x: 0, y: 0, width: 300, height: 200) // データが一次元配列でもOK let dataArray = [ [\u0026#34;北海道\u0026#34;, \u0026#34;青森\u0026#34;, \u0026#34;東京\u0026#34;, \u0026#34;埼玉\u0026#34;,　\u0026#34;長野\u0026#34;, \u0026#34;鳥取\u0026#34;, \u0026#34;etc\u0026#34;] ] let selectedHandler: GeneralPickerView.SelectedHandler = { selected in print(selected[0])　// 鳥取 } let v = GeneralPickerView( frame: pickerViewFrame, dataArray: dataArray, selectedHandler: selectedHandler) まとめ ここまで簡潔に書くことができる理由はUIPickerViewは基本的にdataSouceが[[String]]で固定だからです。 UITableViewも同じようなプロトコルに準拠しますが、dataの型が定まらないため、同じようにはいきません。\n利用方法としてaddSubViewをして使う他にも、 UIPickerViewはTextFieldのinputViewにそのまま代入して使うこともできます。 基本的にはこちらの使い方の方が便利かも\nこのコードはSwift4,5であれば動くはずなので、ご利用くださいませ。\n備考 保持しておいた前回の状態を初期値に反映する機能はこの記事では実装していません。 もし実装するのであれば、コンストラクタで初期値を渡すのがいいでしょう。\n "
+            }
+        
+    ,
+        
+            {
+                "ref": "https://miyashi.app/post/shoe-fitter/",
+                "title": "登山靴の適正サイズをプロに見てもらったら27.5cmじゃなく29.0cmだった",
+                "section": "post",
+                "date" : "2020.05.22",
+                "body": " 概要 登山靴を買う時に、一度はシューフィッター(靴のサイズを測るプロ)に一度は診てもらったほうが良いよという話。\n単純なサイズではなく、自分の足の形をより細かく認識することにより、まるでオーダーメイドのような最高の登山靴が手に入れることができるのだ。\n##　足の形からすべてを見抜くKeen Garage 原宿の店員\n "
+            }
+        
+    ,
+        
+            {
+                "ref": "https://miyashi.app/post/reject-uiwebview/",
+                "title": "LLDBでUIWebViewを使っている箇所を調べる",
+                "section": "post",
+                "date" : "2020.05.15",
+                "body": " 概要 2020年の４月末から、UIWebViewを使用しているアプリはAppStoreConnectにアップロードすることができなくなりました。\nアプリのメインターゲットでUIWebViewを使用していなくても、依存しているライブラリ内部にあれば同じようにリジェクトされます。\nこの記事ではLLDBを使用してUIWebViewを使用している箇所を調べます。\n方法 1. アプリをデバッグ実行する。 2. 任意の箇所でブレークして、デバッグコンソールを表示 3. UIWebViewを使用している箇所に以下の2つのLLDBコマンドでブレークポイントをセット  rbreak UIWebView\n rbreakは正規表現を含んだ任意の文字列を指定すると、その文字列を含むシンボル、ファンクションにブレークポイントを設定できるコマンドです。\n breakpoint set -p UIWebView -A \n 「-p」を使うとソースコード内の任意の文字列を含む箇所にブレークポイントを設定してくれます。\n「-A」を指定するとすべてのモジュール\u0008に対してブレークポイントを設定することができます。\n4. ブレークポイントの一覧を表示する。 breakpoint listコマンドによってブレークポイントの一覧を表示することができる。\n5. UIWebViewが使用されている箇所を特定する。 ブレークポイント情報には、モジュールやファイル、ソースコードの行情報が含まれるので、それらの情報からUIWebViewを使用している箇所を特定することができます。\n "
+            }
+        
+    ,
+        
+            {
+                "ref": "https://miyashi.app/post/byebug-1/",
+                "title": "Railsのbyebugを使ったDebug方法",
+                "section": "post",
+                "date" : "2020.05.02",
+                "body": " 概要 Railsでブレークポイントを貼ってデバッグするにはbyebugというライブラリを使えるようだ。\nbyebugのインストール byebugはRailsにデフォルトで組み込まれていて、Gemfileをみるとtestとdevelopment環境でのみ使えるようにインストールされていた。\nブレークポイントを設定する。 ブレークさせるためには任意のコードにbyebugの一行を追加するだけ。\n該当のコードが実行されたタイミングでプロセスが一時停止して、コンソールでデバッグコマンドを実行することができるようになる。\n良く使いそうなコマンド ■ コンソールで変数の中身を確認する 値を確認するには特に特別なコマンドは必要ない。\nコンソールに確認したい値を記述するだけ。\n確認できる変数は、ブレークしたフレームからアクセスできる変数に限る。\nアクセスできる変数の一覧を調べるコマンドは次に記載\n■ アクセスできるすべての変数を確認する。 var allコマンドを使えば、アクセスできる変数を一覧で見ることができる。\n厳密にはブレークした時点のローカル、グローバル、インスタンス変数が一覧化される。\nこのコマンドの出力は膨大なので、以下のように出力を絞ることができる。\n ローカル変数のみを表示\nvar local グローバル変数のみを表示\nvar global インスタンス変数のみを表示\nvar instance  ■ 使えるメソッド一覧を表示 puts methodsで使えるメソッドを一覧化できる。\nこれはbyebugの機能ではなくputs self.methodsと同じ意味。\n■ スタックトレースを表示 whereでスタックトレースを表示することができる。\n■ 特定のフレームに移動 frame 3のようにwhereコマンドで出力されたフレーム番号を入力すると特定のフレームにジャンプすることができる。\n■ 特定のThreadに移動 RailsはリクエストごとにThreadが作られる仕様のようだ。 thread listでThreadの一覧を表示することができる。 thread currentで現在ブレークしているフレームのあるThreadが表示される。 thread switch 2のようにThread番号を指定すればThreadを切り替えることができる。\n "
+            }
+        
+    ,
+        
+            {
+                "ref": "https://miyashi.app/post/rails-optional/",
+                "title": "RailsのOptional周りの備忘録",
+                "section": "post",
+                "date" : "2020.04.06",
+                "body": " ※ 一番下の追記が一番重要です。\nある値がｎilかどうかを確かめるには、nil?を使う。 (例)\nuser.girlfriend.nil? # girlfriendがnilの場合　=\u0026gt; true # girlfriendが存在する場合　=\u0026gt; false Optional Chainingを使う  Optional Chainingとは\nレシーバがnil\u0008の場合は評価を打ち切ってnilを返し、\nnilでなければ、後続の評価をする便利な記法\n RubyでOptional Chainingする場合はOptionalな値に\u0026amp;をつけるだけでOK。\n(例)\nuser.girlfriend\u0026amp;.name # girlfriendがnilの場合　=\u0026gt; nil # girlfriendが存在する場合　=\u0026gt; \u0026#34;Tailor Swift\u0026#34;などの値 Optional Chainingは名前のとおり、鎖のように繋げて使えるのが便利\n(例)\nuser.girlfriend\u0026amp;.pet\u0026amp;.name 備考 ちなみに、\u0026quot;\u0026quot;のような空文字はnilとしては扱われないので empty?を使って判定する必要がある。\n追記 我らがRailsにはblank?という拡張された便利プロパティが実装されており、 これはnil, \u0026quot;\u0026quot;, \u0026quot; \u0026quot;,　\u0026quot;　\u0026quot;, {} ,[]のときにtrueになる。\n動作を確認したバージョンは5.2.4.2だが、 古いバージョンだと全角スペースはfalseになるらしいので注意\n "
+            }
+        
+    ,
+        
+            {
+                "ref": "https://miyashi.app/post/in-case-braces-dont-fix/",
+                "title": "VSCodeでdo-endの対応を示すハイライトが合わないときの対処法",
+                "section": "post",
+                "date" : "2020.04.05",
+                "body": " 起こった現象 VSCodeでRubyを書くときに、do-endのネストが深くなった場合、\ndoに対応するendをハイライトで示す機能がうまく合わない現象が起こった。(関連Issue)\n対処方法 設定のbuilt-inのlanguage-serverをonにしたら治った。\nSpecialThanks natpenguin\n "
+            }
+        
+    ,
+        
+            {
+                "ref": "https://miyashi.app/post/setup_hugo/",
+                "title": "はじめてのHUGO",
                 "section": "post",
                 "date" : "2020.03.30",
-                "body": " hugo+netlifyを使用してブログを解説してみた。\nその名も「po records」\n「po」はprint objectを意味するLLDBのコマンドのエイリアス\n「records」はアカシック・レコードが格納された変数である😎\nthemeのharborは シンプルでかっこいい\u0026amp;検索窓ついていたので選んだ。\n(もしかしたら検索窓はthemeに依らず後付できるかもしれない)\n "
+                "body": " hugo+netlifyを使用してブログを開設してみた。\nthemeのharborは シンプルでかっこいい\u0026amp;検索窓ついていたので選んだ。\n(もしかしたら検索窓はthemeに依らず後付できるかもしれない)\n躓いたところ 以下の①〜③のステップを踏むことでテーマを適用することができると思っていたが、 なぜか表示されなかったので、④〜⑥のようなワークアラウンドを使った。\n①themes内で以下を実行\n$ git submodule add https://github.com/matsuyoshi30/harbor.git harbor ②projectルートディレクトリ内で以下の２つを実行する。\n$ git submodule init $ git submodule　update ③config.toml内に以下を記載\nthemes = \u0026quot;harbor\u0026quot; ④ themes/harbor内の以下のファイルをそのままprojectルートに元からあるフォルダに差し替える\n* archetypes/ * layouts/ * static/ * content ⑤　themeの作成者の方が提供している、config.tomlのテンプレートをそのままコピペした。\nあとは、$ hugo server -Dを実行してhttp://localhost:1313/にアクセスすれば、うまく表示されるはず。\nその他 「hugo」と「hoge」が似ているので毎回Typoする。\n "
+            }
+        
+    ,
+        
+            {
+                "ref": "https://miyashi.app/post/initial/",
+                "title": "ブログ開設してみた",
+                "section": "post",
+                "date" : "2020.03.30",
+                "body": " その名も「po records」\n「po」はprint objectを意味するLLDBのコマンドのエイリアス\n「records」はアカシック・レコードが格納された変数である😎\n "
             }
         
     

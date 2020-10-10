@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+<title>LLDBでUIWebViewを使っている箇所を調べる</title>
+
+
+  
+
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="alternate" type="application/rss+xml" href="https://miyashi.app/index.xml" title="Site Title">
+
+<link id="dark-mode" rel="stylesheet" href="https://miyashi.app/css/dark-sys.css" />
+<link disabled id="dark-mode-theme" rel="stylesheet" href="https://miyashi.app/css/dark.css" />
+<link rel="stylesheet" href="https://miyashi.app/fontawesome/css/all.css" />
+<script src="https://miyashi.app/js/bundle.js"></script>
+<meta name="generator" content="Hugo 0.68.3" />
+  </head>
+  <body>
+    
+  
+
+
+
+
+  <header>
+    <nav class="navbar">
+  <div class="nav">
+    
+      <a href="https://miyashi.app/" class="nav-logo">
+      <img src="https://miyashi.app/images/icon.png"
+           width="50"
+           height="50"
+           alt="Logo">
+      </a>
+    
+
+    <ul class="nav-links">
+      
+        
+          <li><a href="/about/" name="About"><i class="fas fa-user fa-lg"></i></a></li>
+        
+      
+        
+          <li><a href="/tags" name="Tags"><i class="fas fa-tag fa-lg"></i></a></li>
+        
+      
+        
+          <li><a href="/search" name="Search"><i class="fas fa-search fa-lg"></i></a></li>
+        
+      
+    </ul>
+  </div>
+</nav>
+
+    <div class="intro-header">
+      <div class="container">
+        <div class="post-heading">
+          
+            <h1>LLDBでUIWebViewを使っている箇所を調べる</h1>
+          
+          
+            <span class="meta-post">
+  <i class="fa fa-calendar-alt"></i>&nbsp;May 15, 2020
+  
+</span>
+
+          
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+  <div class="container" role="main">
+    <article class="article" class="blog-post">
+      
+    <hr>
+<h1 id="概要">概要</h1>
+<p>2020年の４月末から、UIWebViewを使用しているアプリはAppStoreConnectにアップロードすることができなくなりました。<br>
+アプリのメインターゲットでUIWebViewを使用していなくても、依存しているライブラリ内部にあれば同じようにリジェクトされます。<br>
+この記事ではLLDBを使用してUIWebViewを使用している箇所を調べます。</p>
+<h1 id="方法">方法</h1>
+<h3 id="1-アプリをデバッグ実行する">1. アプリをデバッグ実行する。</h3>
+<h3 id="2-任意の箇所でブレークしてデバッグコンソールを表示">2. 任意の箇所でブレークして、デバッグコンソールを表示</h3>
+<h3 id="3-uiwebviewを使用している箇所に以下の2つのlldbコマンドでブレークポイントをセット">3. UIWebViewを使用している箇所に以下の2つのLLDBコマンドでブレークポイントをセット</h3>
+<blockquote>
+<p><code>rbreak UIWebView</code></p>
+</blockquote>
+<p>rbreakは正規表現を含んだ任意の文字列を指定すると、その文字列を含むシンボル、ファンクションにブレークポイントを設定できるコマンドです。</p>
+<blockquote>
+<p><code>breakpoint set -p UIWebView -A </code></p>
+</blockquote>
+<p>「-p」を使うとソースコード内の任意の文字列を含む箇所にブレークポイントを設定してくれます。<br>
+「-A」を指定するとすべてのモジュールに対してブレークポイントを設定することができます。</p>
+<h3 id="4-ブレークポイントの一覧を表示する">4. ブレークポイントの一覧を表示する。</h3>
+<p><code>breakpoint list</code>コマンドによってブレークポイントの一覧を表示することができる。</p>
+<h3 id="5-uiwebviewが使用されている箇所を特定する">5. UIWebViewが使用されている箇所を特定する。</h3>
+<p>ブレークポイント情報には、モジュールやファイル、ソースコードの行情報が含まれるので、それらの情報からUIWebViewを使用している箇所を特定することができます。</p>
+<hr>
+
+
+
+      
+        <div class="blog-tags">
+          
+            <a href="https://miyashi.app//tags/lldb/">LLDB</a>&nbsp;
+          
+            <a href="https://miyashi.app//tags/ios/">iOS</a>&nbsp;
+          
+            <a href="https://miyashi.app//tags/appstoreconnect/">AppStoreConnect</a>&nbsp;
+          
+            <a href="https://miyashi.app//tags/uiwebview/">UIWebView</a>&nbsp;
+          
+        </div>
+      
+    </article>
+    
+  </div>
+
+    <footer>
+  <div class="container">
+    <p class="credits copyright">
+      <a href="https://miyashi.app/about">miyashi</a>
+      &nbsp;&copy;
+      2020
+
+      
+        &nbsp;/&nbsp;
+        <a href="https://miyashi.app/">po records</a>
+      
+
+      &nbsp;&ndash;&nbsp;
+      <i class="fas fa-moon" id="dark-mode-toggle"></i>
+
+      <p class="credits theme-by">
+        Powered By <a href="https://gohugo.io">Hugo</a>&nbsp;Theme <a href="https://github.com/matsuyoshi30/harbor">Harbor</a>
+      </p>
+    </p>
+  </div>
+</footer>
+
+    <script>
+  var toggle = document.getElementById("dark-mode-toggle");
+  var darkTheme = document.getElementById("dark-mode-theme");
+
+  var darkThemeSys = document.getElementById("dark-mode");
+
+  
+  var savedTheme = localStorage.getItem("dark-mode-storage") || "light";
+  if (matchMedia('(prefers-color-scheme: dark)').matches) {
+    savedTheme = "dark"
+  }
+  setTheme(savedTheme);
+
+  toggle.addEventListener("click", () => {
+    if (toggle.className === "fas fa-moon") {
+        setTheme("dark");
+    } else if (toggle.className === "fas fa-sun") {
+        setTheme("light");
+    }
+  });
+
+  function setTheme(mode) {
+    localStorage.setItem("dark-mode-storage", mode);
+
+    if (mode === "dark") {
+        darkTheme.disabled = false;
+        darkThemeSys.disabled = false;
+        toggle.className = "fas fa-sun";
+    } else if (mode === "light") {
+        darkTheme.disabled = true;
+        darkThemeSys.disabled = true;
+        toggle.className = "fas fa-moon";
+    }
+  }
+</script>
+
+  </body>
+</html>
