@@ -15,7 +15,8 @@ tags = [
 -----
 
 # 概要
-You Tubeにあがっている[英語コーチ-イングリッシュおさる](https://www.youtube.com/channel/UCZikuEIssIzv0fdkVEH7Djg)の[【完全イメージ化】前置詞44選【総集編】](https://www.youtube.com/watch?v=8nwxejhMf50)のという動画がかなりわかりやすくてよかった。内容は全て覚えておく価値があると思ったが、個人的に特に目からウロコだった内容をピックアップして記載しておく。
+You Tubeにあがっている[英語コーチ-イングリッシュおさる](https://www.youtube.com/channel/UCZikuEIssIzv0fdkVEH7Djg)の[【完全イメージ化】前置詞44選【総集編】](https://www.youtube.com/watch?v=8nwxejhMf50)という動画がかなりわかりやすくてよかった。  
+内容は全て覚えておく価値があると思ったが、個人的に特に目からウロコだった内容をピックアップして記載しておく。
 
 
 # ○ after
@@ -25,9 +26,8 @@ You Tubeにあがっている[英語コーチ-イングリッシュおさる](ht
 `after` = `後に`  
 
 #### 本来のイメージ
-`after` = `〜追いかける`  
+`after` = `〜を追いかける`  
 
-ここでの`追いかける`はfollowと一緒。
 #### 説明
 例えば以下の例文を捉える場合
 ```
