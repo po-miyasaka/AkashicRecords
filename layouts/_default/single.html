@@ -1,8 +1,9 @@
 {{ define "main" }}
   <div class="container" role="main">
     <article class="article" class="blog-post">
+      <h2>目次</h2>
+      {{ .TableOfContents }}
       {{ partial "toc.html" . }}
-
       {{ if .Params.tags }}
         <div class="blog-tags">
           {{ range .Params.tags }}
