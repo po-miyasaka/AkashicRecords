@@ -1,7 +1,7 @@
 +++  
 author = "miyashi"  
 title = "[GraphQL] Apollo-iOS を使ってみて感じたイケてるところ。イケてないところ。"  
-date = "2020-12-17"
+date = "2020-12-18"
 description = ""  
 tags = [  
     "GraphQL",  
@@ -60,7 +60,7 @@ Apollo-iOSでは、通信、パース、キャッシュの操作などの処理�
 
 [Interceptorプロトコル](https://github.com/apollographql/apollo-ios/blob/main/Sources/Apollo/ApolloInterceptor.swift#L2)に準拠した構造体を独自の`InterceptorProvider`に組み込むことで、通信前後に任意の処理を行うことができます。
 
-例えば、リクエストヘッダーにアクセストークンを付与することも以下のように簡単に行なえます。
+例えば、リクエストヘッダーにアクセストークンを付与することも簡単に行なえます。
 
 #  イケてない所
 ## エラーはスキーマで定義されない
@@ -91,7 +91,7 @@ GraphQLでは、エラーはHTTPステータス200として以下のようなJSO
 エラーの情報は正常系とは違いスキーマ等には明示されません。
 また、[GraphQLの仕様](https://graphql.org/learn/)としてかっちり仕様がきまっているわけではないようです。
 
-認証エラーやその他ビジネスロジックに関わるエラーは`extensions`に格納して返す必要がありますが
+認証エラーやその他ビジネスロジックに関わる独自のエラーは`extensions`に格納されて返ってくるはずですが
 何をどのタイミングで返すのか、どんな構造なのかはサーバーエンジニアと認識を合わせる必要があります。
 
 Apollo-iOSで`extensions`内の`code` にアクセスするには以下のようにします。
