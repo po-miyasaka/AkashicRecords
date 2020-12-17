@@ -7,10 +7,10 @@ tags = [
     "GraphQL",  
     "Apollo-iOS",  
     "Swift",  
+    "iOS",
     "UIKit",  
 ]  
 +++  
-
 
 ---
 この記事は [iOS #2 Advent Calendar 2020](https://qiita.com/advent-calendar/2020/ios-2) の18日目の記事です。 
@@ -33,7 +33,7 @@ tags = [
 これにより私もAPI仕様についてレビューするというムーブが簡単にできるようになりました。
 まずはインターフェースをかっちりと決めて、その後にサーバーとクライアントがそれぞれ実装に入るという[スキーマ駆動](https://blog.spacemarket.com/code/schema-driven/)がしやすい点がイケてました。
 
-また、[ページネーション](https://graphql.org/learn/pagination/)や[認証](https://graphql.org/learn/authorization/)などの実現方法パターンも[GraphQLコミュニティ](https://graphql.org/learn/authorization/)の方で策定されており、これを参照することで、実装方法や仕様の一貫性を保つことができる点もイケてるなと思いました。
+また、[ページネーション](https://graphql.org/learn/pagination/)や[認証](https://graphql.org/learn/authorization/)などの実現方法パターンも[GraphQLコミュニティ](https://graphql.org/learn/authorization/)の方で策定されており、これを参照することで、実装方法や仕様の一貫性を保つことができる点もいいなと思いました。
 
 ##  Interceptorによって通信フローがカスタマイズしやすい
 こちらはApollo-iOSについてです。
@@ -96,7 +96,7 @@ GraphQLの思想として、「画面ごとに必要な情報だけ取得して�
 アプリ全体がApollo-iOSに依存することや、自動生成された構造体が扱いづらいことです。
 例えば、モックのデータが用意しづらかったり、クエリのプロパティをフラグメントで共通化すると、コードの構造が変わるところなどが上げられます。
 
-よって、結局はアプリで使いやすい[ドメインオブジェクト](https://qiita.com/takasek/items/70ab5a61756ee620aee6)にマッピングすることになります。その時は複数の画面でも使用できるようにオプショナルな値を持つことになると思います。(もしくはStrategyパターン)。
+よって、結局はアプリで使いやすい[ドメインオブジェクト](https://qiita.com/takasek/items/70ab5a61756ee620aee6)にマッピングすることになります。その時は複数の画面でも使用できるようにオプショナルな値を持つことになると思います。
 そしてマッピングのためには扱いづらい自動生成されたコードと向き合う必要があります。マッピングのテストのためのモックの用意も結構大変です。
 
 ちなみに、モックは以下の方法で用意できます。(もっといい方法がありそうですが)
@@ -116,9 +116,9 @@ GraphQLの思想として、「画面ごとに必要な情報だけ取得して�
 
 
 ## Interceptorの単体テストは難しい
-[Interceptor](https://github.com/apollographql/apollo-ios/blob/main/Sources/Apollo/ApolloInterceptor.swift#L2)の処理は以下のメソッド内部に書くので、テストのときはApollo独自の型の引数を用意する必要があります。
-もしテストをする場合はRequestChainを継承したモックを作って、
-`chain.proceedAsync()` や`chain.handleErrorAsync`などの実行をトラップする必要があるのかなと思います。
+[Interceptor](https://github.com/apollographql/apollo-ios/blob/main/Sources/Apollo/ApolloInterceptor.swift#L2)の処理は以下のメソッド内部に書くので、Apollo独自の型の引数のモックを用意する必要があります。
+AssertionはRequestChainを継承したモックを作って、
+`chain.proceedAsync()` や`chain.handleErrorAsync()`などの実行をトラップするのがいいのかなと思います。
 ```
   func interceptAsync<Operation: GraphQLOperation>(
     chain: RequestChain,
@@ -138,9 +138,11 @@ Apollo-iOSではQueryのリクエストは`fetch`、Mutationのリクエスト�
 
 
 # まとめ
-GraphQLはチーム全体としては導入のメリットはかなりあると思いました。
-しかしApollo-iOSはまだまだ発展途上だと思いました。
-GraphQL自体はただのプロトコルなので、Apollo-iOSを導入せず独自実装しているプロダクトもあるようです。
-とはいえApollo-iOSの開発は盛んなので、どんどん改善されていくと思います。私もできる所から貢献して行こうと思っています。
+GraphQLはチーム全体としては導入のメリットはかなりあると思います。
+
+しかしApollo-iOSはまだまだ発展途上な部分が多いと思います。
+
+とはいえApollo-iOSの開発は盛んなので、どんどん改善されていくと思います。
+私もできる所から貢献して行こうと思っています。
 
 ---
