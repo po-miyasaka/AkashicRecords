@@ -105,7 +105,8 @@ response?.parsedResponse?.errors?[0].extensions?[“code”] == “HogeError”
 また、このような200系で返ってくるエラーは`Result.failure`ではなく`Result.success`に包まれてハンドラーに返ってくる点にも注意が必要です。
 
 ## 各Interceptorのエラー型についてApollo-iOSの内部実装を確認する必要がある。
-これはしょうがない気もしますが、Interceptorにそれぞれ独自のエラーが定義されており( [例: MaxRetryInterceptor](https://github.com/apollographql/apollo-ios/blob/main/Sources/Apollo/MaxRetryInterceptor.swift#L9))、それぞれの内部実装を確認しながら、Errorをそれぞれの具体的な型にキャストして適したハンドリングをする必要があります。
+Interceptorにそれぞれ独自のエラーが定義されており( [例: MaxRetryInterceptor](https://github.com/apollographql/apollo-ios/blob/main/Sources/Apollo/MaxRetryInterceptor.swift#L9))、それぞれの内部実装を確認しながら、Errorをそれぞれの具体的な型にキャストして適したハンドリングをする必要があります。
+構造さえ知れば特に不便なこともないんですが、普通にライブラリ内のコードリーディングが求められているので割とハードル高めだなと思った次第です。
 
 ## GraphQLの思想が今日のモバイルアーキテクチャと合わない
 
