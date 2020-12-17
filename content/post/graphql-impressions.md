@@ -1,6 +1,6 @@
 +++  
 author = "miyashi"  
-title = "Apollo-iOS(GraphQL)を使ってみてイケてるところ、イケてないところ"  
+title = "[GraphQL] Apollo-iOS を使ってみて感じたイケてるところ。イケてないところ。"  
 date = "2020-12-16"  
 description = ""  
 tags = [  
@@ -30,24 +30,25 @@ tags = [
 <a href='/images/post/graphql-impressions/playground.png'>{{< figure src="/images/post/graphql-impressions/playground.png" title="" class="center" width="600" >}}</a>
 
 
-これにより私もAPI仕様についてレビューするというムーブが簡単にできるようになりました。
-まずはインターフェースをかっちりと決めて、その後にサーバーとクライアントがそれぞれ実装に入るという[スキーマ駆動](https://blog.spacemarket.com/code/schema-driven/)がしやすい点がイケてました。
+こうしたGraphQLから提供されたツールを利用することで、API仕様についてのレビューをより効率的に行えるようになり、
+先にインターフェースの仕様をかっちりと決めて、その後にサーバーとクライアントがそれぞれ実装に入るという[スキーマ駆動](https://blog.spacemarket.com/code/schema-driven/)がしやすい点がイケてました。
 
-また、[ページネーション](https://graphql.org/learn/pagination/)や[認証](https://graphql.org/learn/authorization/)などの実現方法パターンも[GraphQLコミュニティ](https://graphql.org/learn/authorization/)の方で策定されており、これを参照することで、実装方法や仕様の一貫性を保つことができる点もいいなと思いました。
+また、[ページネーション](https://graphql.org/learn/pagination/)や[認証](https://graphql.org/learn/authorization/)などのよくある処理について、実現パターンが[GraphQLコミュニティ](https://graphql.org/learn/authorization/)で策定されており、これを参照することで実装方法や仕様の一貫性を保つことができる点もいいなと思いました。
 
-##  Interceptorによって通信フローがカスタマイズしやすい
+##  Interceptorによって通信処理がカスタマイズしやすい
 こちらはApollo-iOSについてです。
-Apollo-iOSでは、通信、パース、キャッシュの操作などの処理をそれぞれ[Interceptor](https://github.com/apollographql/apollo-ios/blob/main/Sources/Apollo/ApolloInterceptor.swift#L2)として個別に定義し配列にして順番に処理をします。
+Apollo-iOSでは、通信、パース、キャッシュの操作などの処理を[Interceptor](https://github.com/apollographql/apollo-ios/blob/main/Sources/Apollo/ApolloInterceptor.swift#L2)として個別に定義し、それらを配列にして登録することで順番に処理されるようになります。
 
 デフォルトでは[LegacyInterceptorProvider](https://github.com/apollographql/apollo-ios/blob/main/Sources/Apollo/InterceptorProvider.swift#L31)が定義されていて、この中に[Interceptorの配列](https://github.com/apollographql/apollo-ios/blob/main/Sources/Apollo/InterceptorProvider.swift#L57)が定義されています。
 
 [Interceptorプロトコル](https://github.com/apollographql/apollo-ios/blob/main/Sources/Apollo/ApolloInterceptor.swift#L2)に準拠した構造体を独自の`InterceptorProvider`に組み込むことで、通信前後に任意の処理を行うことができます。
-例えば通信前にリクエストヘッダーにアクセストークンを付与することも簡単に行うことができます。
+
+例えば、リクエストヘッダーにアクセストークンを付与することも以下のように簡単に行なえます。
 
 #  イケてない所
 ## エラー周り
 ### エラーはスキーマで定義されない
-一般的なGraphQLライブラリの挙動では、エラーは200レスポンスとして以下のようなJSON形式で返ってきます。
+一般的なGraphQLライブラリ（Apollo-iOSについても同様）の挙動では、エラーはHTTPステータス200として以下のようなJSON形式で返ってきます。
 
 `message` や`locations`　の値はライブラリによって自動的に格納され、`extensions`にサーバーエンジニアが任意で設定した情報が格納されています。
 
@@ -82,9 +83,9 @@ response?.parsedResponse?.errors?[0].extensions?[“code”] == “HogeError”
 
 できることとしては、タイポしないようにクライアント側にEnumで列挙したり、スキーマのDocにエラーの情報も追加で一覧化してもらうといった形で、見える化するくらいしかないのかなと思っています。
 
-また、この場合の200系のエラーはデフォルトでは　`Result.success`に包まれてハンドラーに返って来る点にも注意が必要です。
+なお、この場合の200系のエラーはデフォルトでは、`Result.failure`ではなく`Result.success`に包まれてハンドラーに返ってくる点にも注意が必要です。
 
-### Interceptorがそれぞれ独自のエラーを持っていてApollo-iOSのコードを読んで内部実装を把握する必要がある。
+### 各Interceptorのエラー型についてApollo-iOSの内部実装を確認する必要がある。
 これはしょうがない気もしますが、Interceptorにそれぞれ独自のエラーが定義されており( [例: MaxRetryInterceptor](https://github.com/apollographql/apollo-ios/blob/main/Sources/Apollo/MaxRetryInterceptor.swift#L9))、それぞれの内部実装を確認しながら、Errorをそれぞれの具体的な型にキャストして適したハンドリングをする必要があります。
 
 ## GraphQLの思想が今日のモバイルアーキテクチャと合わない
@@ -94,7 +95,7 @@ GraphQLの思想として、「画面ごとに必要な情報だけ取得して�
 
 上記の実装の場合の問題点としては、
 アプリ全体がApollo-iOSに依存することや、自動生成された構造体が扱いづらいことです。
-例えば、モックのデータが用意しづらかったり、クエリのプロパティをフラグメントで共通化すると、コードの構造が変わるところなどが上げられます。
+例えば、モックのデータが用意しづらかったり、クエリのプロパティをフラグメントで共通化すると、コードの構造が変わるところなどが挙げられます。
 
 よって、結局はアプリで使いやすい[ドメインオブジェクト](https://qiita.com/takasek/items/70ab5a61756ee620aee6)にマッピングすることになります。その時は複数の画面でも使用できるようにオプショナルな値を持つことになると思います。
 そしてマッピングのためには扱いづらい自動生成されたコードと向き合う必要があります。マッピングのテストのためのモックの用意も結構大変です。
@@ -119,7 +120,7 @@ GraphQLの思想として、「画面ごとに必要な情報だけ取得して�
 [Interceptor](https://github.com/apollographql/apollo-ios/blob/main/Sources/Apollo/ApolloInterceptor.swift#L2)の処理は以下のメソッド内部に書くので、Apollo独自の型の引数のモックを用意する必要があります。
 AssertionはRequestChainを継承したモックを作って、
 `chain.proceedAsync()` や`chain.handleErrorAsync()`などの実行をトラップするのがいいのかなと思います。
-```
+```swift
   func interceptAsync<Operation: GraphQLOperation>(
     chain: RequestChain,
     request: HTTPRequest<Operation>,
