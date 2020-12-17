@@ -18,8 +18,7 @@ tags = [
   
 # 概要  
 今業務で[Apollo-iOS](https://github.com/apollographql/apollo-ios)(GraphQL)を導入してます。
-ネット上のいろんなサイトを参考にして、実装しましたが、思い返すと、Apollo-iOSの使い方について言及されている記事は多いのですが、実際使ってみての感想はあまり見たことがないので、
-今回はイケてると思った所とイケてないなと思った所について、主観で好き勝手書いてみました。  
+ネット上のいろんなサイトを参考し実装することができましたが、思い返すとApollo-iOSの使い方について言及されている記事は多いのですが、実際使ってみての感想はあまり見たことがないので、今回はイケてると思った所とイケてないなと思った所について、主観で好き勝手書いてみました。  
 
 これからGraphQL導入しようか迷っているという方に流し目に読んでいただけると幸いです.  
 捉え方は要件や環境によると思うので、当てはまらない場合もあると思います。  
@@ -41,7 +40,7 @@ iOSアプリからGraphQLでサーバーとやり取りするためのライブ�
 
 
 #  イケてる所  
-## サーバーエンジニアとの認識齟齬がなくなる。
+## サーバーエンジニアとの認識齟齬がなくなる
 これはApollo-iOSというよりもGraphQLについてですが、[GraphiQL](https://github.com/graphql/graphiql)や[PlayGround](https://github.com/graphql/graphql-playground)などのツールを導入することで、ブラウザ上でリクエストを簡単に試したり、付属するDoc機能でAPIの仕様を簡単に把握することができます。
 [初めてのGraphQL](https://www.oreilly.co.jp/books/9784873118932/)という本でも紹介されていた [サンプル](http://snowtooth.moonhighway.com/)でPlayGroundを実際に触ることができます。
 
@@ -104,12 +103,11 @@ response?.parsedResponse?.errors?[0].extensions?[“code”] == “HogeError”
 
 また、このような200系で返ってくるエラーは`Result.failure`ではなく`Result.success`に包まれてハンドラーに返ってくる点にも注意が必要です。
 
-## 各Interceptorのエラー型についてApollo-iOSの内部実装を確認する必要がある。
+## 各Interceptorのエラー型についてApollo-iOSの内部実装を確認する必要がある
 Interceptorにそれぞれ独自のエラーが定義されており( [例: MaxRetryInterceptor](https://github.com/apollographql/apollo-ios/blob/main/Sources/Apollo/MaxRetryInterceptor.swift#L9))、それぞれの内部実装を確認しながら、Errorをそれぞれの具体的な型にキャストして適したハンドリングをする必要があります。
 構造さえ知れば特に不便なこともないんですが、普通にライブラリ内のコードリーディングが求められているので割とハードル高めだなと思った次第です。
 
-## DDD的な思想とGraphQLの特長がマッチしない部分がある。
-
+## DDD的な思想とGraphQLの特長がマッチしない部分がある
 GraphQLの思想として「(画面ごとに)必要な情報だけ取得できる」という特長がありますが、
 DDD的な思想を元にアーキテクチャを組んでいる場合は以下の点でGraphQLの思想とバッティングするんじゃないかと思います。
 
@@ -137,7 +135,6 @@ DDD的な思想を元にアーキテクチャを組んでいる場合は以下�
 2. 1.の出力はそのままSwiftのコードとしても機能するはずなので、`[String: Any]?`の変数として定義すればコンパイルが通るはずです。(膨大な量のコードになるので、型を明示しないとコンパイルが通らないかもしれません。)
 
 
-
 ## Interceptorの単体テストは難しい
 [Interceptor](https://github.com/apollographql/apollo-ios/blob/main/Sources/Apollo/ApolloInterceptor.swift#L2)の処理は以下のメソッド内部に書くので、テストするためには引数のモックを用意する必要があります。引数は４つとも独自の型で構成されており、正しい値を作るには、内部のコードを知る必要があり、かなりハードルが高いなと思いました。
 
@@ -152,8 +149,7 @@ DDD的な思想を元にアーキテクチャを組んでいる場合は以下�
 ちなみに、Assertionについては、RequestChainを継承したモックを作って引数に渡し、
 `chain.proceedAsync()` や`chain.handleErrorAsync()`などの実行をトラップするのがいいのかなと思います。
 
-
-## QueryとMutationで実行するメソッドが違う。
+## QueryとMutationで実行するメソッドが違う
 GraphQLでは特性に応じて主に3種類のオペレーションが存在します。
 私はその内の２つ、QueryとMutationを使用しており、
 Queryはサーバーから値を取得するとき、Mutationはサーバーの値を変える時に使用されます。
