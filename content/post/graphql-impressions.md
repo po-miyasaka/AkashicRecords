@@ -64,8 +64,7 @@ Apollo-iOSでは、通信、パース、キャッシュの操作などの処理�
 例えば、リクエストヘッダーにアクセストークンを付与することも以下のように簡単に行なえます。
 
 #  イケてない所
-## エラー周り
-### エラーはスキーマで定義されない
+## エラーはスキーマで定義されない
 一般的なGraphQLライブラリ（Apollo-iOSについても同様）の挙動では、エラーはHTTPステータス200として以下のようなJSON形式で返ってきます。
 
 `message` や`locations`　の値はライブラリによって自動的に格納され、`extensions`にサーバーエンジニアが任意で設定した情報が格納されています。
@@ -103,7 +102,7 @@ response?.parsedResponse?.errors?[0].extensions?[“code”] == “HogeError”
 
 なお、この場合の200系のエラーはデフォルトでは、`Result.failure`ではなく`Result.success`に包まれてハンドラーに返ってくる点にも注意が必要です。
 
-### 各Interceptorのエラー型についてApollo-iOSの内部実装を確認する必要がある。
+## 各Interceptorのエラー型についてApollo-iOSの内部実装を確認する必要がある。
 これはしょうがない気もしますが、Interceptorにそれぞれ独自のエラーが定義されており( [例: MaxRetryInterceptor](https://github.com/apollographql/apollo-ios/blob/main/Sources/Apollo/MaxRetryInterceptor.swift#L9))、それぞれの内部実装を確認しながら、Errorをそれぞれの具体的な型にキャストして適したハンドリングをする必要があります。
 
 ## GraphQLの思想が今日のモバイルアーキテクチャと合わない
