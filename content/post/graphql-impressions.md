@@ -15,7 +15,7 @@ tags = [
 ---
 この記事は [iOS #2 Advent Calendar 2020](https://qiita.com/advent-calendar/2020/ios-2) の18日目の記事です。 
 
-
+  
 # 概要  
 今業務で[Apollo-iOS](https://github.com/apollographql/apollo-ios)(GraphQL)を導入してます。
 ネット上のいろんなサイトを参考にして、実装しましたが、思い返すと、Apollo-iOSの使い方について言及されている記事は多いのですが、実際使ってみての感想はあまり見たことがないので、
@@ -24,6 +24,21 @@ tags = [
 これからGraphQL導入しようか迷っているという方に流し目に読んでいただけると幸いです.  
 捉え方は要件や環境によると思うので、当てはまらない場合もあると思います。  
 また、私の知識が及んでいないゆえの間違いなど気づいた点があれば[Twitter](https://twitter.com/po_miyasaka)等でコメントいただけると嬉しいです。  
+
+# GraphQLとは  
+簡単に言うとサーバーとクライアントとの通信をする際のプロトコルのようなもので、特定のライブラリやツールを指すものではありません。
+詳しくはすでに様々なサイトで紹介されているので、参考になるであろうリンクを記載しておきます。
+[GraphQL.org](https://graphql.org/)
+[世のフロントエンドエンジニアにApollo Clientを布教したい](https://qiita.com/seya/items/26c8a0dc549a10efcdf8#graphql%E3%81%A8%E3%81%AF)
+[Web API初心者と学ぶGraphQL](https://qiita.com/SiragumoHuin/items/cc58f456bc43a1be41b4)
+
+# Apollo-iOSとは
+iOSアプリからGraphQLでサーバーとやり取りするためのライブラリです。
+こちらも参考となるリンクを貼っておきます。
+[Apollo-iOS](https://github.com/apollographql/apollo-ios)
+[Apollo-iOS](https://www.apollographql.com/docs/ios/)
+
+
 
 #  イケてる所  
 ## サーバーエンジニアとの認識齟齬がなくなる。
