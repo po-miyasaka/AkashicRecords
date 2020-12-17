@@ -139,17 +139,18 @@ DDD的な思想を元にアーキテクチャを組んでいる場合は以下�
 
 
 ## Interceptorの単体テストは難しい
-[Interceptor](https://github.com/apollographql/apollo-ios/blob/main/Sources/Apollo/ApolloInterceptor.swift#L2)の処理は以下のメソッド内部に書くので、Apollo独自の型の引数のモックを用意する必要があります。
-AssertionはRequestChainを継承したモックを作って、
-`chain.proceedAsync()` や`chain.handleErrorAsync()`などの実行をトラップするのがいいのかなと思います。
+[Interceptor](https://github.com/apollographql/apollo-ios/blob/main/Sources/Apollo/ApolloInterceptor.swift#L2)の処理は以下のメソッド内部に書くので、テストするためには引数のモックを用意する必要があります。引数は４つとも独自の型で構成されており、正しい値を作るには、内部のコードを知る必要があり、かなりハードルが高いなと思いました。
+
 ```swift
   func interceptAsync<Operation: GraphQLOperation>(
     chain: RequestChain,
     request: HTTPRequest<Operation>,
     response: HTTPResponse<Operation>?,
     completion: @escaping (Result<GraphQLResult<Operation.Data>, Error>) -> Void)
-
 ```
+
+ちなみに、Assertionについては、RequestChainを継承したモックを作って引数に渡し、
+`chain.proceedAsync()` や`chain.handleErrorAsync()`などの実行をトラップするのがいいのかなと思います。
 
 
 ## QueryとMutationで実行するメソッドが違う。
